@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="it" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FORGE — Raw & Industrial Fitness</title>
+
+    <!-- Impostazioni PWA / Web App per iPhone e Android -->
+    <meta name="apple-mobile-web-app-title" content="FORGE">
+    <meta name="application-name" content="FORGE">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0e0f11">
+
+    <!-- Icona App -->
+    <link rel="apple-touch-icon" href="icona.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icona.png">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Barlow Condensed, Rajdhani, Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- MediaPipe Pose per AI Vision Form Check -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Barlow Condensed"', 'sans-serif'],
+                        tech: ['"Rajdhani"', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        forgeBg: '#0e0f11',
+                        steelCard: '#17191d',
+                        steelElevated: '#1f2228',
+                        steelBorder: '#2a2e36',
+                        ember: '#ff5a00',
+                        emberBright: '#ff6b00',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --ember: #ff5a00;
+            --ember-bright: #ff6b00;
+            --steel-bg: #17191d;
+            --steel-border: #2a2e36;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0e0f11;
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            user-select: none;
+            background-image:
+                radial-gradient(circle at 50% -10%, rgba(255, 90, 0, 0.12), transparent 55%),
+                radial-gradient(circle at 85% 85%, rgba(255, 90, 0, 0.05), transparent 45%),
+                url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 20L20 40L0 20Z' fill='none' stroke='%23ffffff' stroke-opacity='0.024' stroke-width='1'/%3E%3Ccircle cx='20' cy='20' r='1.2' fill='%23ff5a00' fill-opacity='0.06'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+
+        /* Pannello Acciaio Spazzolato (Concept Style) */
+        .steel-panel {
+            position: relative;
+            background: linear-gradient(165deg, #1d2025 0%, #14161a 60%, #181a1f 100%);
+            border: 1px solid #2e333d;
+            border-radius: 14px;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.8),
+                0 12px 26px -6px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Piastra angolare metallica con rivetto (come nell'immagine concept) */
+        .corner-plate {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(225deg, #323742 0%, #1c1f26 55%, transparent 56%);
+            border-top-right-radius: 13px;
+            pointer-events: none;
+            z-index: 4;
+        }
+        .corner-plate::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #9ca3af, #1f2937);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.95);
+        }
+
+        /* Rivetti agli angoli */
+        .rivet-tl, .rivet-tr, .rivet-bl, .rivet-br {
+            position: absolute;
+            width: 5.5px;
+            height: 5.5px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #8a92a0, #1c2026 75%);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.25), 0 1px 2px rgba(0,0,0,0.95);
+            pointer-events: none;
+            z-index: 5;
+        }
+        .rivet-tl { top: 8px; left: 8px; }
+        .rivet-tr { top: 8px; right: 8px; }
+        .rivet-bl { bottom: 8px; left: 8px; }
+        .rivet-br { bottom: 8px; right: 8px; }
+
+        /* Contenitore universale per contenere sempre l'onda d'urto dentro il pulsante */
+        .spark-trigger {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Pulsante Principale Pieno Arancio (Concept Style: ▶ INIZIA ALLENAMENTO) */
+        .btn-ember {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, #ff6b00 0%, #e65100 100%);
+            border: 1px solid #ff8c3a;
+            color: #0b0c0e;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            will-change: transform;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                0 4px 16px rgba(255, 90, 0, 0.35),
+                0 3px 0 #8a2c00;
+            transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.16s ease, filter 0.16s ease;
+        }
+        .btn-ember:hover {
+            filter: brightness(1.06);
+        }
+        .btn-ember:active {
+            transform: translateY(2px) scale(0.975);
+            box-shadow:
+                inset 0 1px 2px rgba(0, 0, 0, 0.35),
+                0 2px 8px rgba(255, 90, 0, 0.22),
+                0 1px 0 #8a2c00;
+        }
+
+        /* Pulsante Secondario Acciaio */
+        .btn-steel {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, #282c36 0%, #191b22 100%);
+            border: 1px solid #383e4b;
+            color: #e5e7eb;
+            will-change: transform;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.09),
+                0 2px 0 #0a0b0d;
+            transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.16s ease, background 0.16s ease;
+        }
+        .btn-steel:active {
+            transform: translateY(2px) scale(0.975);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7);
+            border-color: #ff5a00;
+        }
+
+        /* Effetto Onda d'Urto al Click (GPU-accelerated) */
+        .ripple-wave {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(255, 110, 20, 0.22) 55%, transparent 75%);
+            transform: scale(0);
+            will-change: transform, opacity;
+            animation: rippleExpand 0.46s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: none;
+            z-index: 20;
+        }
+        @keyframes rippleExpand {
+            to {
+                transform: scale(2.8);
+                opacity: 0;
+            }
+        }
+
+        /* Particelle Scintille Volanti (GPU-accelerated, zero layout shift) */
+        .spark-particle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #ffb36b;
+            box-shadow: 0 0 6px #ff5a00, 0 0 10px #ffae00;
+            pointer-events: none;
+            will-change: transform, opacity;
+            z-index: 9999;
+            animation: sparkFly 0.48s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes sparkFly {
+            0% {
+                opacity: 1;
+                transform: translate3d(var(--sx), var(--sy), 0) scale(1.1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate3d(var(--ex), var(--ey), 0) scale(0.1);
+            }
+        }
+
+        /* Display Numerico Digitale */
+        .digital-readout {
+            background: #0a0b0e;
+            border: 1px solid #272b35;
+            box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.92), 0 1px 0 rgba(255, 255, 255, 0.05);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Effetto Ruggine per inattività (> 10 giorni) */
+        .rust-overlay {
+            background-image:
+                radial-gradient(circle at 25% 30%, rgba(124, 45, 18, 0.45), transparent 55%),
+                radial-gradient(circle at 75% 70%, rgba(154, 52, 18, 0.4), transparent 55%),
+                repeating-linear-gradient(45deg, rgba(67, 20, 7, 0.25) 0px, rgba(67, 20, 7, 0.25) 3px, transparent 3px, transparent 7px);
+            mix-blend-mode: multiply;
+        }
+        .rust-filter {
+            filter: sepia(0.75) saturate(0.55) brightness(0.72) contrast(1.1);
+        }
+
+        /* Transizioni Tab */
+        .tab-view {
+            display: none;
+            animation: viewEnter 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .tab-view.active {
+            display: block;
+        }
+        @keyframes viewEnter {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #0e0f11; }
+        ::-webkit-scrollbar-thumb { background: #323742; border-radius: 99px; }
+
+        /* Input scuri */
+        input, select {
+            background-color: #0b0c0e;
+            border: 1px solid #2c313c;
+            color: #f3f4f6;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+        input:focus, select:focus {
+            border-color: #ff5a00;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-24">
+
+    <!-- ========================================================= -->
+    <!-- TOP HEADER INDUSTRIALE (STILE CONCEPT)                    -->
+    <!-- ========================================================= -->
+    <header class="sticky top-0 z-30 bg-[#0e0f11]/95 backdrop-blur-md border-b border-[#252932] px-4 py-3">
+        <div class="max-w-lg mx-auto flex items-center justify-between">
+            <!-- Logo FORGE stile concept -->
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#2a2f39] to-[#121418] border border-[#3e4554] flex items-center justify-center shadow-inner relative">
+                    <svg class="w-5 h-5 text-ember" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-display text-2xl font-extrabold tracking-wider text-white leading-none">FORGE</span>
+                        <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-ember/20 text-ember border border-ember/40">PRO</span>
+                    </div>
+                    <p class="font-tech text-[11px] font-semibold tracking-widest text-gray-400 uppercase leading-none mt-0.5">
+                        ALLENATI. MONITORA. MIGLIORA.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Orologio Digitale (come in alto a destra nel concept) -->
+            <div class="flex items-center gap-2.5">
+                <div id="headerActiveSessionBadge" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-md bg-ember/15 border border-ember/40">
+                    <span class="w-2 h-2 rounded-full bg-ember animate-ping"></span>
+                    <span id="headerSessionClock" class="font-mono text-xs font-bold text-ember">00:00</span>
+                </div>
+                <div class="digital-readout px-2.5 py-1.5 rounded-lg text-right">
+                    <span id="liveClock" class="font-mono text-sm font-bold text-gray-200 tracking-wider block leading-none">16:42</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================================= -->
+    <!-- CONTENUTO PRINCIPALE (MAX WIDTH MOBILE-FIRST)             -->
+    <!-- ========================================================= -->
+    <main class="flex-1 w-full max-w-lg mx-auto px-4 pt-4 space-y-4">
+
+        <!-- ========================================================= -->
+        <!-- TAB 1 (SINISTRA): FORM CHECK AI VISION (FLESSIONI/TRAZIONI)-->
+        <!-- ========================================================= -->
+        <section id="tab-form" class="tab-view space-y-4">
+
+            <!-- Selettore Esercizio + Record -->
+            <div class="steel-panel p-4">
+                <div class="corner-plate"></div>
+                <span class="rivet-tl"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+
+                <div class="flex items-center justify-between mb-3 pr-5">
+                    <div>
+                        <span class="font-tech text-xs font-bold text-ember uppercase tracking-widest">BIOMECHANICAL SCANNER</span>
+                        <h2 class="font-display text-2xl font-extrabold uppercase tracking-wide text-white leading-none">FORM CHECK AI</h2>
+                    </div>
+                    <div class="digital-readout px-3 py-1.5 rounded-lg text-right">
+                        <span class="font-mono text-[9px] text-gray-400 uppercase block">RECORD PERSONALE</span>
+                        <span id="formRecordDisplay" class="font-display text-lg font-extrabold text-ember leading-none">0 REP</span>
+                    </div>
+                </div>
+
+                <!-- Switch Flessioni / Trazioni -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <button id="btnModePushup" onclick="setFormExercise('pushup')" class="btn-ember py-2.5 px-3 rounded-lg text-sm flex items-center justify-center gap-2 spark-trigger">
+                        <span>FLESSIONI</span>
+                    </button>
+                    <button id="btnModePullup" onclick="setFormExercise('pullup')" class="btn-steel py-2.5 px-3 rounded-lg font-display text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 spark-trigger">
+                        <span>TRAZIONI</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visore Fotocamera + Scheletro AI -->
+            <div class="steel-panel p-3 overflow-hidden">
+                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+
+                <div class="relative w-full aspect-[4/3] bg-[#08090b] rounded-lg overflow-hidden border border-[#272b35] flex items-center justify-center">
+                    <video id="formVideo" class="hidden w-full h-full object-cover scale-x-[-1]" playsinline muted></video>
+                    <canvas id="formCanvas" class="w-full h-full object-cover scale-x-[-1]"></canvas>
+
+                    <!-- Placeholder quando la camera è spenta -->
+                    <div id="cameraPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center p-5 text-center bg-[#090a0d]/95">
+                        <div class="w-12 h-12 rounded-xl bg-[#181b22] border border-[#2f3542] flex items-center justify-center mb-3 text-ember">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <p class="font-display text-base font-bold uppercase text-white tracking-wide">APPOGGIA IL TELEFONO A TERRA</p>
+                        <p id="formInstructionText" class="text-xs text-gray-400 mt-1 max-w-xs">
+                            Inquadrati di profilo o a 45°. L'AI rileva l'angolo del gomito (&lt;90°) e conta solo le flessioni valide.
+                        </p>
+                    </div>
+
+                    <!-- HUD Sovrapposto -->
+                    <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                        <span id="formStatusBadge" class="px-2.5 py-1 rounded bg-black/80 border border-white/10 font-mono text-[10px] font-bold uppercase text-gray-300">
+                            STANDBY
+                        </span>
+                        <span id="formAngleBadge" class="px-2.5 py-1 rounded bg-black/80 border border-ember/40 font-mono text-[10px] font-bold text-ember">
+                            ANGOLO: --°
+                        </span>
+                    </div>
+
+                    <!-- Contatore Gigante in basso -->
+                    <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-end justify-between pointer-events-none">
+                        <div class="bg-black/85 border border-[#2d323e] px-3 py-1.5 rounded-lg">
+                            <span class="font-mono text-[9px] text-gray-400 uppercase block">ESECUZIONE</span>
+                            <span id="formFeedbackMsg" class="font-tech text-sm font-bold text-white uppercase">PRONTO AL RILEVAMENTO</span>
+                        </div>
+                        <div class="bg-black/90 border border-ember/60 px-3.5 py-1 rounded-lg text-right shadow-lg">
+                            <span class="font-mono text-[9px] text-ember uppercase block">REP VALIDE</span>
+                            <span id="formRepCount" class="font-display text-3xl font-extrabold text-white leading-none">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controlli Scanner -->
+                <div class="grid grid-cols-3 gap-2 mt-3">
+                    <button id="btnToggleCamera" onclick="toggleFormCamera()" class="btn-ember py-2.5 px-2 rounded-lg text-xs flex items-center justify-center gap-1.5 spark-trigger">
+                        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>AVVIA AI</span>
+                    </button>
+                    <button onclick="resetFormCounter()" class="btn-steel py-2.5 px-2 rounded-lg font-display text-xs font-bold uppercase tracking-wider spark-trigger">
+                        RESET
+                    </button>
+                    <button onclick="saveFormSession()" class="btn-steel py-2.5 px-2 rounded-lg font-display text-xs font-bold uppercase tracking-wider text-ember border-ember/40 spark-trigger">
+                        SALVA RECORD
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAB 2 (CENTRO): ALLENAMENTO A SESSIONE & RECUPERO         -->
+        <!-- ========================================================= -->
+        <section id="tab-workout" class="tab-view active space-y-4">
+
+            <!-- Banner Stato Sessione (Inattiva vs Attiva) -->
+            <div id="sessionStartCard" class="steel-panel p-4">
+                <div class="corner-plate"></div>
+                <span class="rivet-tl"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+
+                <div class="pr-4">
+                    <span class="font-tech text-xs font-bold text-ember uppercase tracking-widest">SESSIONE DI FORZA</span>
+                    <h2 class="font-display text-2xl font-extrabold uppercase text-white tracking-wide leading-tight mt-0.5">
+                        PRONTO A FORGIARE
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-1">
+                        Avvia la sessione, registra ogni esercizio con set, ripetizioni e kg, e ottieni gli XP bilanciati al termine.
+                    </p>
+                </div>
+
+                <button onclick="startWorkoutSession()" class="btn-ember w-full mt-4 py-3.5 px-4 rounded-xl text-base flex items-center justify-center gap-2 spark-trigger">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>INIZIA ALLENAMENTO</span>
+                </button>
+            </div>
+
+            <!-- Area Sessione Attiva (Visibile quando la sessione è avviata) -->
+            <div id="activeSessionContainer" class="hidden space-y-4">
+
+                <!-- Barra Controllo Sessione Attiva -->
+                <div class="steel-panel p-3.5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-ember animate-pulse"></div>
+                        <div>
+                            <span class="font-mono text-[10px] text-gray-400 uppercase block leading-none">SESSIONE IN CORSO</span>
+                            <span id="sessionDurationDisplay" class="font-display text-xl font-extrabold text-white tracking-wider">00:00</span>
+                        </div>
+                    </div>
+                    <button onclick="finishWorkoutSessionAndCalculateXP()" class="btn-ember px-4 py-2.5 rounded-lg text-xs spark-trigger">
+                        TERMINA E CALCOLA XP
+                    </button>
+                </div>
+
+                <!-- Form Aggiungi Esercizio alla Sessione -->
+                <div class="steel-panel p-4 space-y-3">
+                    <div class="corner-plate"></div>
+                    <span class="rivet-tl"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+
+                    <div class="flex items-center justify-between pr-5">
+                        <h3 class="font-display text-base font-extrabold uppercase tracking-wide text-white">REGISTRA ESERCIZIO</h3>
+                        <span id="exerciseBenchmarkHint" class="font-mono text-[10px] text-gray-400">NUOVO ESERCIZIO</span>
+                    </div>
+
+                    <!-- Gruppo Muscolare + Nome Esercizio -->
+                    <div class="grid grid-cols-5 gap-2">
+                        <div class="col-span-2">
+                            <label class="font-mono text-[9px] text-gray-400 uppercase block mb-1">MUSCOLO</label>
+                            <select id="wkMuscle" onchange="updateExerciseSuggestions()" class="w-full rounded-lg px-2.5 py-2 text-xs font-semibold">
+                                <option value="petto">Petto</option>
+                                <option value="schiena">Schiena</option>
+                                <option value="gambe">Gambe</option>
+                                <option value="spalle">Spalle</option>
+                                <option value="braccia">Braccia</option>
+                                <option value="core">Core</option>
+                                <option value="cardio">Cardio</option>
+                            </select>
+                        </div>
+                        <div class="col-span-3">
+                            <label class="font-mono text-[9px] text-gray-400 uppercase block mb-1">ESERCIZIO</label>
+                            <select id="wkExerciseSelect" onchange="handleExerciseSelectChange()" class="w-full rounded-lg px-2.5 py-2 text-xs font-semibold">
+                            </select>
+                            <input id="wkExerciseCustom" type="text" oninput="checkBenchmarkPreview()" placeholder="Scrivi nome esercizio..." class="hidden w-full mt-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold">
+                        </div>
+                    </div>
+
+                    <!-- Set, Ripetizioni, Peso (kg) -->
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <div class="bg-[#0e1013] border border-[#272b35] rounded-lg p-2 text-center">
+                            <span class="font-mono text-[9px] text-gray-400 uppercase block">SET</span>
+                            <div class="flex items-center justify-between mt-1">
+                                <button onclick="adjustInput('wkSets', -1, 1, 20)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">-</button>
+                                <input id="wkSets" type="number" value="3" min="1" max="20" oninput="checkBenchmarkPreview()" class="w-10 text-center bg-transparent border-none font-display text-lg font-extrabold text-white p-0">
+                                <button onclick="adjustInput('wkSets', 1, 1, 20)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">+</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#0e1013] border border-[#272b35] rounded-lg p-2 text-center">
+                            <span class="font-mono text-[9px] text-gray-400 uppercase block">RIPETIZIONI</span>
+                            <div class="flex items-center justify-between mt-1">
+                                <button onclick="adjustInput('wkReps', -1, 1, 100)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">-</button>
+                                <input id="wkReps" type="number" value="10" min="1" max="100" oninput="checkBenchmarkPreview()" class="w-10 text-center bg-transparent border-none font-display text-lg font-extrabold text-white p-0">
+                                <button onclick="adjustInput('wkReps', 1, 1, 100)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">+</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#0e1013] border border-[#272b35] rounded-lg p-2 text-center">
+                            <span class="font-mono text-[9px] text-gray-400 uppercase block">PESO (KG)</span>
+                            <div class="flex items-center justify-between mt-1">
+                                <button onclick="adjustInput('wkWeight', -2, 0, 500)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">-</button>
+                                <input id="wkWeight" type="number" value="40" min="0" max="500" step="0.5" oninput="checkBenchmarkPreview()" class="w-11 text-center bg-transparent border-none font-display text-lg font-extrabold text-ember p-0">
+                                <button onclick="adjustInput('wkWeight', 2, 0, 500)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Anteprima Progressione + Pulsante Aggiungi -->
+                    <div class="flex items-center justify-between gap-2 pt-1">
+                        <div id="progressionStatusTag" class="font-mono text-[10px] px-2.5 py-1.5 rounded bg-[#0e1013] border border-[#272b35] text-gray-400 flex-1 truncate">
+                            PRIMA REGISTRAZIONE
+                        </div>
+                        <button onclick="addExerciseToSession()" class="btn-ember px-4 py-2.5 rounded-lg text-xs shrink-0 spark-trigger">
+                            + AGGIUNGI ALLA SESSIONE
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timer di Recupero Industrial (Al centro tra registrazione ed esercizi completati) -->
+            <div class="steel-panel p-4">
+                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <span class="font-tech text-[11px] font-bold text-gray-400 uppercase tracking-widest block">CRONOMETRO RECUPERO</span>
+                        <h3 class="font-display text-base font-extrabold uppercase text-white">TIMER TRA LE SERIE</h3>
+                    </div>
+                    <!-- Preset Rapidi -->
+                    <div class="flex items-center gap-1">
+                        <button onclick="setRestPreset(45)" class="btn-steel px-2 py-1 rounded font-mono text-[10px] font-bold spark-trigger">0:45</button>
+                        <button onclick="setRestPreset(60)" class="btn-steel px-2 py-1 rounded font-mono text-[10px] font-bold spark-trigger">1:00</button>
+                        <button onclick="setRestPreset(90)" class="btn-steel px-2 py-1 rounded font-mono text-[10px] font-bold spark-trigger">1:30</button>
+                        <button onclick="setRestPreset(120)" class="btn-steel px-2 py-1 rounded font-mono text-[10px] font-bold spark-trigger">2:00</button>
+                    </div>
+                </div>
+
+                <!-- Display Digitale + Regolazione Fine -->
+                <div class="flex items-center justify-between gap-2">
+                    <button onclick="changeRestSeconds(-15)" class="btn-steel px-3 py-3 rounded-lg font-mono text-xs font-bold spark-trigger">-15S</button>
+
+                    <div class="digital-readout flex-1 py-2.5 px-4 rounded-xl text-center relative overflow-hidden">
+                        <span id="restTimerDisplay" class="font-mono text-3xl font-extrabold text-white tracking-widest">01:30</span>
+                        <div class="w-full h-1 bg-[#181b22] rounded-full mt-1.5 overflow-hidden">
+                            <div id="restProgressBar" class="h-full bg-ember transition-all duration-300" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="changeRestSeconds(15)" class="btn-steel px-3 py-3 rounded-lg font-mono text-xs font-bold spark-trigger">+15S</button>
+                </div>
+
+                <!-- Avvia / Ferma / Reset Recupero -->
+                <div class="grid grid-cols-3 gap-2 mt-3">
+                    <button id="btnStartRest" onclick="toggleRestTimer()" class="col-span-2 btn-ember py-2.5 px-3 rounded-lg text-xs flex items-center justify-center gap-1.5 spark-trigger">
+                        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>AVVIA RECUPERO</span>
+                    </button>
+                    <button onclick="resetRestTimer()" class="btn-steel py-2.5 px-3 rounded-lg font-display text-xs font-bold uppercase tracking-wider spark-trigger">
+                        RESET
+                    </button>
+                </div>
+            </div>
+
+            <!-- Diario Esercizi Svolti nella Sessione Corrente (Sotto il Timer) -->
+            <div id="sessionCompletedCard" class="hidden steel-panel p-4">
+                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+
+                <div class="flex items-center justify-between mb-2.5">
+                    <h3 class="font-display text-sm font-extrabold uppercase tracking-wider text-gray-200">
+                        ESERCIZI COMPLETATI (<span id="sessionLogCount">0</span>)
+                    </h3>
+                    <span id="sessionTotalVolume" class="font-mono text-[10px] text-ember font-bold">VOL: 0 KG</span>
+                </div>
+
+                <div id="sessionExerciseList" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    <p class="text-xs text-gray-500 text-center py-4 font-mono">Nessun esercizio registrato. Aggiungi il primo qui sopra.</p>
+                </div>
+            </div>
+
+            <!-- Ultimo Riepilogo XP Guadagnati (Nascosto durante la sessione attiva) -->
+            <div id="lastSessionSummaryCard" class="hidden steel-panel p-4 border-ember/40">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-tech text-xs font-bold text-ember uppercase tracking-widest">ULTIMO REPORT SESSIONE</span>
+                    <span id="summaryTotalXpBadge" class="font-display text-base font-extrabold text-white bg-ember/20 border border-ember/50 px-2.5 py-0.5 rounded">+0 XP</span>
+                </div>
+                <div id="summaryBreakdownList" class="space-y-1.5 text-xs"></div>
+            </div>
+
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- TAB 3 (DESTRA): STATISTICHE RPG & MAPPA ANATOMICA         -->
+        <!-- ========================================================= -->
+        <section id="tab-stats" class="tab-view space-y-4">
+
+            <!-- Scheda Personaggio RPG + Anello Costanza -->
+            <div class="steel-panel p-4">
+                <div class="corner-plate"></div>
+                <span class="rivet-tl"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+
+                <div class="flex items-center justify-between gap-3 pr-4">
+                    <div class="flex items-center gap-3.5 min-w-0">
+                        <!-- Scudo Livello Generale -->
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-b from-[#262b35] to-[#111317] border-2 border-ember flex flex-col items-center justify-center shadow-[0_0_18px_rgba(255,90,0,0.28)] shrink-0">
+                            <span class="font-mono text-[9px] text-gray-400 uppercase">LVL</span>
+                            <span id="rpgOverallLevel" class="font-display text-2xl font-extrabold text-white leading-none">1</span>
+                        </div>
+                        <div class="min-w-0">
+                            <span class="font-tech text-xs font-bold text-ember uppercase tracking-widest">SCHEDA ATLETA</span>
+                            <h2 id="rpgPlayerTitle" class="font-display text-xl font-extrabold uppercase text-white tracking-wide leading-tight truncate">
+                                APPRENDISTA DEL FERRO
+                            </h2>
+                            <p id="rpgInactivityInfo" class="font-mono text-[10px] text-gray-400 mt-0.5">Ultimo allenamento: Oggi</p>
+                        </div>
+                    </div>
+
+                    <!-- Mini Anello Costanza (stile concept) -->
+                    <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
+                        <svg class="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
+                            <path class="text-[#262a34]" stroke-width="3.2" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            <path id="consistencyRingPath" class="text-ember transition-all duration-500" stroke-dasharray="100, 100" stroke-width="3.2" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                            <span id="sessionsCountBadge" class="font-display text-xs font-extrabold text-white leading-none">0/16</span>
+                            <span class="font-mono text-[7px] text-gray-400 uppercase">MESE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner Penalità Ruggine (> 10 giorni inattività) -->
+                <div id="rustWarningBanner" class="hidden mt-3 p-2.5 rounded-lg bg-amber-950/50 border border-amber-700/60 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-base">⚠️</span>
+                        <div>
+                            <p class="font-display text-xs font-bold uppercase text-amber-400 tracking-wide">STATISTICHE ARRUGGINITE</p>
+                            <p class="text-[11px] text-amber-200/80">Oltre 10 giorni di stop. Completa una sessione per lucidare i muscoli (nessun livello perso).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interruttore Modalità Vacanza / Infortunio -->
+                <div class="mt-3 pt-3 border-t border-[#252932] flex items-center justify-between">
+                    <div>
+                        <span class="font-display text-xs font-bold uppercase tracking-wide text-gray-200 block">MODALITÀ VACANZA / INFORTUNIO</span>
+                        <span class="text-[11px] text-gray-400">Congela il timer di ruggine durante le pause programmate</span>
+                    </div>
+                    <button id="btnVacationToggle" onclick="toggleVacationMode()" class="btn-steel px-3 py-1.5 rounded-lg font-mono text-xs font-bold spark-trigger">
+                        OFF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mappa Anatomica Fronte / Retro con Colorazione Rank -->
+            <div class="steel-panel p-4 relative overflow-hidden">
+                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+
+                <div class="flex items-center justify-between mb-2">
+                    <div>
+                        <span class="font-tech text-[11px] font-bold text-ember uppercase tracking-widest block">RANKED PHYSIQUE</span>
+                        <h3 class="font-display text-base font-extrabold uppercase text-white">MAPPA MUSCOLARE</h3>
+                    </div>
+                    <span class="font-mono text-[10px] text-gray-400">TOCCA UN MUSCOLO</span>
+                </div>
+
+                <!-- Container Manichino + Eventuale Patina Ruggine -->
+                <div id="anatomyWrapper" class="relative py-2 flex items-center justify-center">
+                    <div id="rustOverlayLayer" class="hidden rust-overlay absolute inset-0 rounded-xl pointer-events-none z-10"></div>
+
+                    <svg viewBox="0 0 360 275" class="w-full max-w-[340px] h-auto drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)]">
+                        <!-- Etichette Fronte / Retro -->
+                        <text x="90" y="14" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono" font-size="9" font-weight="700">FRONTE</text>
+                        <text x="270" y="14" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono" font-size="9" font-weight="700">RETRO</text>
+
+                        <!-- ==================== CORPO FRONTE (X centro = 90) ==================== -->
+                        <!-- Testa & Collo -->
+                        <circle cx="90" cy="34" r="13" fill="#2a2f3a" stroke="#111317" stroke-width="1.5"/>
+                        <rect x="84" y="46" width="12" height="9" rx="3" fill="#2a2f3a"/>
+
+                        <!-- SPALLE (Fronte) -->
+                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('spalle')">
+                            <path data-muscle="spalle" d="M62,56 Q52,60 51,74 L63,76 L67,58 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="spalle" d="M118,56 Q128,60 129,74 L117,76 L113,58 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                        </g>
+
+                        <!-- PETTO -->
+                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('petto')">
+                            <path data-muscle="petto" d="M67,57 L89,57 L89,84 L66,81 Q64,69 67,57 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="petto" d="M113,57 L91,57 L91,84 L114,81 Q116,69 113,57 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                        </g>
+
+                        <!-- BRACCIA (Fronte: Bicipiti/Avambracci) -->
+                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('braccia')">
+                            <rect data-muscle="braccia" x="49" y="75" width="12" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <rect data-muscle="braccia" x="47" y="103" width="11" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <rect data-muscle="braccia" x="119" y="75" width="12" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <rect data-muscle="braccia" x="122" y="103" width="11" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                        </g>
+
+                        <!-- CORE (Addome & Obliqui) -->
+                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('core')">
+                            <rect data-muscle="core" x="74" y="85" width="32" height="44" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <line x1="90" y1="86" x2="90" y2="128" stroke="#0d0e11" stroke-width="1.2"/>
+                            <line x1="75" y1="99" x2="105" y2="99" stroke="#0d0e11" stroke-width="1.2"/>
+                            <line x1="75" y1="113" x2="105" y2="113" stroke="#0d0e11" stroke-width="1.2"/>
+                        </g>
+
+                        <!-- GAMBE (Fronte: Quadricipiti & Polpacci) -->
+                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('gambe')">
+                            <path data-muscle="gambe" d="M71,131 L88,131 L86,188 L72,188 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="gambe" d="M92,131 L109,131 L108,188 L94,188 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="gambe" d="M73,191 L85,191 L83,246 L74,246 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="gambe" d="M95,191 L107,191 L106,246 L97,246 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                        </g>
+
+                        <!-- ==================== CORPO RETRO (X centro = 270) ==================== -->
+                        <!-- Testa & Collo -->
+                        <circle cx="270" cy="34" r="13" fill="#2a2f3a" stroke="#111317" stroke-width="1.5"/>
+                        <rect x="264" y="46" width="12" height="9" rx="3" fill="#2a2f3a"/>
+
+                        <!-- SPALLE (Retro) -->
+                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('spalle')">
+                            <path data-muscle="spalle" d="M242,56 Q232,60 231,74 L243,76 L247,58 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="spalle" d="M298,56 Q308,60 309,74 L297,76 L293,58 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                        </g>
+
+                        <!-- SCHIENA (Trapezio, Dorsali, Lombari) -->
+                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('schiena')">
+                            <path data-muscle="schiena" d="M248,57 L292,57 L287,102 L270,126 L253,102 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <line x1="270" y1="58" x2="270" y2="124" stroke="#0d0e11" stroke-width="1.3"/>
+                        </g>
+
+                        <!-- BRACCIA (Retro: Tricipiti) -->
+                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('braccia')">
+                            <rect data-muscle="braccia" x="229" y="75" width="12" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <rect data-muscle="braccia" x="227" y="103" width="11" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <rect data-muscle="braccia" x="299" y="75" width="12" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <rect data-muscle="braccia" x="302" y="103" width="11" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                        </g>
+
+                        <!-- GAMBE (Retro: Glutei, Femorali, Polpacci) -->
+                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('gambe')">
+                            <path data-muscle="gambe" d="M252,126 L269,126 L269,150 L251,148 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="gambe" d="M271,126 L288,126 L289,148 L271,150 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="gambe" d="M251,151 L268,151 L266,188 L252,188 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="gambe" d="M272,151 L289,151 L288,188 L274,188 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="gambe" d="M253,191 L265,191 L263,246 L254,246 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                            <path data-muscle="gambe" d="M275,191 L287,191 L286,246 L277,246 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Box Dettaglio Muscolo Selezionato -->
+                <div id="selectedMuscleCard" class="mt-2 bg-[#0e1013] border border-[#2a2e36] rounded-xl p-3 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div id="detailMuscleMedal" class="w-11 h-11 rounded-xl bg-[#161920] border border-[#2c313d] flex items-center justify-center shrink-0"></div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span id="detailMuscleName" class="font-display text-base font-extrabold uppercase text-white">PETTO</span>
+                                <span id="detailMuscleRankBadge" class="font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase bg-amber-900/40 text-amber-500 border border-amber-700/50">
+                                    WOOD · LVL 1
+                                </span>
+                            </div>
+                            <p id="detailMuscleXpText" class="font-mono text-[11px] text-gray-400 mt-1">0 / 100 XP al prossimo livello</p>
+                        </div>
+                    </div>
+                    <div class="w-20 shrink-0">
+                        <div class="w-full h-2 bg-[#1a1d24] rounded-full overflow-hidden border border-[#2c313d]">
+                            <div id="detailMuscleProgressBar" class="h-full bg-ember transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Elenco Completo delle 7 Statistiche Base -->
+            <div class="steel-panel p-4 space-y-2.5">
+                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="font-display text-base font-extrabold uppercase tracking-wide text-white">STATISTICHE & RANK</h3>
+                    <span class="font-mono text-[10px] text-gray-400">6 GRUPPI + CARDIO</span>
+                </div>
+
+                <div id="statsBarsContainer" class="space-y-2"></div>
+
+                <!-- Legenda 9 Rank con Medaglie -->
+                <div class="pt-3 mt-2 border-t border-[#252932]">
+                    <span class="font-mono text-[9px] text-gray-400 uppercase tracking-wider block mb-2">MEDAGLIERE GERARCHIA RANK</span>
+                    <div id="rankLegendRow" class="grid grid-cols-3 gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Controllo Test Ruggine / Inattività -->
+            <div class="steel-panel p-3.5 flex items-center justify-between">
+                <div>
+                    <span class="font-mono text-[10px] text-gray-400 uppercase block">SIMULATORE TEST RUGGINE</span>
+                    <span id="simDaysLabel" class="font-display text-sm font-bold text-white">0 GG STOP</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="simulateInactivityDays(12)" class="btn-steel px-2.5 py-1.5 rounded font-mono text-[10px] font-bold text-amber-400 spark-trigger">
+                        SIMULA 12GG STOP
+                    </button>
+                    <button onclick="simulateInactivityDays(0)" class="btn-steel px-2.5 py-1.5 rounded font-mono text-[10px] font-bold text-emerald-400 spark-trigger">
+                        LUCIDA OGGI
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ========================================================= -->
+    <!-- BOTTOM NAVIGATION BAR (3 SEZIONI: FORM | ALLENAMENTO | STATS)-->
+    <!-- ========================================================= -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#121418]/95 backdrop-blur-md border-t border-[#282c36] px-3 py-2">
+        <div class="max-w-lg mx-auto grid grid-cols-3 gap-2">
+
+            <!-- Sinistra: FORM -->
+            <button id="nav-form" onclick="switchTab('form')" class="nav-btn py-2 px-2 rounded-xl flex flex-col items-center justify-center gap-1 text-gray-400 transition-all spark-trigger">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                <span class="font-display text-xs font-extrabold uppercase tracking-wider">FORM</span>
+            </button>
+
+            <!-- Centro: ALLENAMENTO -->
+            <button id="nav-workout" onclick="switchTab('workout')" class="nav-btn active-nav py-2 px-2 rounded-xl flex flex-col items-center justify-center gap-1 bg-ember/15 border border-ember/40 text-ember transition-all spark-trigger">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h2m14 0h2M5 7v6m14-6v6M7 10h10M9 6v8m6-8v8"/>
+                </svg>
+                <span class="font-display text-xs font-extrabold uppercase tracking-wider">ALLENAMENTO</span>
+            </button>
+
+            <!-- Destra: STATISTICHE -->
+            <button id="nav-stats" onclick="switchTab('stats')" class="nav-btn py-2 px-2 rounded-xl flex flex-col items-center justify-center gap-1 text-gray-400 transition-all spark-trigger">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span class="font-display text-xs font-extrabold uppercase tracking-wider">STATISTICHE</span>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- Toast Notification Custom (Mai alert) -->
+    <div id="forgeToast" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-200">
+        <div class="bg-[#161920] border border-ember/80 px-4 py-2.5 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.9)] flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-ember"></span>
+            <span id="forgeToastText" class="font-display text-sm font-bold uppercase tracking-wide text-white">NOTIFICA</span>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- LOGICA APPLICATIVA JAVASCRIPT                             -->
+    <!-- ========================================================= -->
+    <script>
+        // =========================================================
+        // 1. FEEDBACK MECCANICO, SCINTILLE & SUONO SINTETICO
+        // =========================================================
+        let audioCtx = null;
+        function playMetallicClick() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(190, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(55, audioCtx.currentTime + 0.045);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.045);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } catch (e) {}
+        }
+
+        function playRestEndAlarm() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                [520, 660, 880].forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.12);
+                    gain.gain.setValueAtTime(0.09, audioCtx.currentTime + idx * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.12 + 0.18);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + idx * 0.12);
+                    osc.stop(audioCtx.currentTime + idx * 0.12 + 0.2);
+                });
+            } catch (e) {}
+        }
+
+        document.addEventListener('pointerdown', (e) => {
+            const btn = e.target.closest('.spark-trigger');
+            if (!btn) return;
+
+            if (navigator.vibrate) navigator.vibrate(10);
+            playMetallicClick();
+
+            const rect = btn.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX || (rect.left + rect.width / 2);
+            const y = e.clientY || (rect.top + rect.height / 2);
+
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x - rect.left - size / 2}px`;
+            ripple.style.top = `${y - rect.top - size / 2}px`;
+            ripple.className = 'ripple-wave';
+
+            const oldRipples = btn.querySelectorAll('.ripple-wave');
+            if (oldRipples.length > 2) oldRipples[0].remove();
+            btn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 480);
+
+            const isPrimary = btn.classList.contains('btn-ember');
+            const sparkCount = isPrimary ? 7 : 4;
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < sparkCount; i++) {
+                const spark = document.createElement('span');
+                spark.className = 'spark-particle';
+                const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() * 0.4);
+                const dist = 18 + Math.random() * 24;
+                spark.style.setProperty('--sx', `${x}px`);
+                spark.style.setProperty('--sy', `${y}px`);
+                spark.style.setProperty('--ex', `${x + Math.cos(angle) * dist}px`);
+                spark.style.setProperty('--ey', `${y + Math.sin(angle) * dist - 8}px`);
+                fragment.appendChild(spark);
+                setTimeout(() => spark.remove(), 500);
+            }
+            document.body.appendChild(fragment);
+        }, { passive: true });
+
+        let toastTimer = null;
+        function showToast(msg) {
+            const el = document.getElementById('forgeToast');
+            const txt = document.getElementById('forgeToastText');
+            if (!el || !txt) return;
+            txt.textContent = msg;
+            el.classList.remove('opacity-0', '-translate-y-2');
+            el.classList.add('opacity-100', 'translate-y-0');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                el.classList.remove('opacity-100', 'translate-y-0');
+                el.classList.add('opacity-0', '-translate-y-2');
+            }, 2600);
+        }
+
+        // =========================================================
+        // 2. STATO GLOBALE PERSISTENTE & GERARCHIA 9 RANK
+        // =========================================================
+        const RANKS = [
+            { name: 'Wood', minLvl: 1, color: '#8B5A2B' },
+            { name: 'Bronze', minLvl: 3, color: '#CD7F32' },
+            { name: 'Silver', minLvl: 6, color: '#9CA3AF' },
+            { name: 'Gold', minLvl: 10, color: '#EAB308' },
+            { name: 'Platinum', minLvl: 15, color: '#14B8A6' },
+            { name: 'Diamond', minLvl: 21, color: '#38BDF8' },
+            { name: 'Champion', minLvl: 28, color: '#C084FC' },
+            { name: 'Titan', minLvl: 36, color: '#EF4444' },
+            { name: 'Olympian', minLvl: 45, color: '#FDE047' }
+        ];
+
+        const MUSCLE_INFO = {
+            petto: {
+                label: 'Petto',
+                presets: ['Panca Piana', 'Panca Inclinata Manubri', 'Panca Declinata', 'Croci ai Cavi', 'Chest Press', 'Dips alle Parallele', 'Flessioni', 'Pullover Manubrio']
+            },
+            schiena: {
+                label: 'Schiena',
+                presets: ['Trazioni alla Sbarra', 'Lat Machine Avanti', 'Rematore Bilanciere', 'Rematore Manubrio', 'Pulley Basso', 'T-Bar Row', 'Stacco da Terra', 'Pull-Down Braccia Tese']
+            },
+            gambe: {
+                label: 'Gambe',
+                presets: ['Squat Bilanciere', 'Leg Press 45°', 'Affondi Manubri', 'Bulgarian Split Squat', 'Leg Extension', 'Leg Curl Sdraiato', 'Stacco Rumeno', 'Calf Raise in Piedi']
+            },
+            spalle: {
+                label: 'Spalle',
+                presets: ['Military Press', 'Lento Avanti Manubri', 'Alzate Laterali', 'Alzate Laterali ai Cavi', 'Alzate Frontali', 'Alzate Posteriori (Rear Delt)', 'Face Pull', 'Arnold Press']
+            },
+            braccia: {
+                label: 'Braccia',
+                presets: ['Curl Bilanciere', 'Curl Manubri Alternato', 'Curl Panca Scott', 'Hammer Curl', 'Pushdown Cavi Corda', 'French Press Bilanciere EZ', 'Dips tra Panche', 'Estensioni Tricipiti Sopra la Testa']
+            },
+            core: {
+                label: 'Core',
+                presets: ['Crunch al Cavo Alto', 'Plank Zavorrato', 'Leg Raise Sospeso', 'Reverse Crunch', 'Russian Twist', 'Ab Wheel Rollout', 'Pallof Press', 'Mountain Climber']
+            },
+            cardio: {
+                label: 'Resistenza / Cardio',
+                presets: ['Corsa Tapis Roulant', 'Camminata in Salita', 'Cyclette', 'Vogatore (Rowing)', 'Salto con la Corda', 'Ellittica', 'HIIT Sprint', 'StairMaster (Scale)']
+            }
+        };
+
+        const DEFAULT_STATE = {
+            stats: {
+                petto: { xp: 0, level: 1 },
+                schiena: { xp: 0, level: 1 },
+                gambe: { xp: 0, level: 1 },
+                spalle: { xp: 0, level: 1 },
+                braccia: { xp: 0, level: 1 },
+                core: { xp: 0, level: 1 },
+                cardio: { xp: 0, level: 1 }
+            },
+            exerciseBenchmarks: {},
+            formRecords: {
+                pushup: 0,
+                pullup: 0
+            },
+            sessionsCompleted: 0,
+            lastWorkoutTimestamp: Date.now(),
+            simulatedInactiveDays: null,
+            vacationMode: false,
+            lastWorkoutSummary: null
+        };
+
+        let appState = JSON.parse(localStorage.getItem('forge_app_state_v3')) || JSON.parse(JSON.stringify(DEFAULT_STATE));
+        let selectedMuscle = 'petto';
+
+        function saveState() {
+            localStorage.setItem('forge_app_state_v3', JSON.stringify(appState));
+        }
+
+        function getRankForLevel(level) {
+            let current = RANKS[0];
+            for (const r of RANKS) {
+                if (level >= r.minLvl) current = r;
+            }
+            return current;
+        }
+
+        function getXpNeededForNextLevel(level) {
+            return Math.round(100 + (level - 1) * 35);
+        }
+
+        function getInactiveDays() {
+            if (appState.simulatedInactiveDays !== null && appState.simulatedInactiveDays !== undefined) {
+                return appState.simulatedInactiveDays;
+            }
+            const diffMs = Date.now() - (appState.lastWorkoutTimestamp || Date.now());
+            return Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
+        }
+
+        function getRankMedalSVG(rankName, color, size = 26) {
+            const tierIndex = RANKS.findIndex(r => r.name === rankName);
+            const hasWings = tierIndex >= 5;
+            const hasCrown = tierIndex >= 7;
+            const innerShape = tierIndex <= 1
+                ? `<polygon points="16,9 22,16 16,23 10,16" fill="${color}" fill-opacity="0.35" stroke="${color}" stroke-width="1.5"/>`
+                : tierIndex <= 4
+                ? `<polygon points="16,7 23,12 21,22 11,22 9,12" fill="${color}" fill-opacity="0.35" stroke="${color}" stroke-width="1.6"/>`
+                : `<polygon points="16,6 24,11 24,20 16,26 8,20 8,11" fill="${color}" fill-opacity="0.4" stroke="${color}" stroke-width="1.8"/><circle cx="16" cy="16" r="3" fill="#ffffff"/>`;
+
+            return `
+                <svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 6px ${color}66);">
+                    ${hasWings ? `<path d="M4 13L9 15L6 20L3 17Z M28 13L23 15L26 20L29 17Z" fill="${color}" fill-opacity="0.85"/>` : ''}
+                    ${hasCrown ? `<path d="M11 6L13.5 3L16 5.5L18.5 3L21 6Z" fill="${color}"/>` : ''}
+                    <path d="M16 3L26 8V18C26 23.5 21.5 27.5 16 29C10.5 27.5 6 23.5 6 18V8L16 3Z" fill="#12141a" stroke="${color}" stroke-width="2"/>
+                    ${innerShape}
+                </svg>
+            `;
+        }
+
+        // =========================================================
+        // 3. NAVIGAZIONE & OROLOGIO LIVE
+        // =========================================================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-view').forEach(sec => sec.classList.remove('active'));
+            const targetSec = document.getElementById(`tab-${tabName}`);
+            if (targetSec) targetSec.classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-ember/15', 'border', 'border-ember/40', 'text-ember');
+                btn.classList.add('text-gray-400');
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-400');
+                activeBtn.classList.add('bg-ember/15', 'border', 'border-ember/40', 'text-ember');
+            }
+
+            if (tabName === 'stats') {
+                renderStatsScreen();
+            }
+        }
+
+        function updateLiveClock() {
+            const clockEl = document.getElementById('liveClock');
+            if (!clockEl) return;
+            const now = new Date();
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            clockEl.textContent = `${hh}:${mm}`;
+        }
+        setInterval(updateLiveClock, 10000);
+        updateLiveClock();
+
+        // =========================================================
+        // 4. ALLENAMENTO A SESSIONE REALE & MOTORE XP BILANCIATO
+        // =========================================================
+        let activeSession = {
+            isRunning: false,
+            startTime: null,
+            timerInterval: null,
+            exercises: []
+        };
+
+        function adjustInput(id, delta, min, max) {
+            const input = document.getElementById(id);
+            if (!input) return;
+            let val = parseFloat(input.value) || 0;
+            val = Math.max(min, Math.min(max, val + delta));
+            input.value = val;
+            checkBenchmarkPreview();
+        }
+
+        function getSelectedExerciseName() {
+            const sel = document.getElementById('wkExerciseSelect');
+            if (sel.value === '__custom__') {
+                return document.getElementById('wkExerciseCustom').value.trim();
+            }
+            return sel.value.trim();
+        }
+
+        function updateExerciseSuggestions() {
+            const muscle = document.getElementById('wkMuscle').value;
+            const selectEl = document.getElementById('wkExerciseSelect');
+            const customInput = document.getElementById('wkExerciseCustom');
+            const presets = MUSCLE_INFO[muscle]?.presets || [];
+
+            selectEl.innerHTML = presets.map(p => `<option value="${p}">${p}</option>`).join('') +
+                `<option value="__custom__">+ Altro esercizio (scrivi)...</option>`;
+
+            customInput.classList.add('hidden');
+            customInput.value = '';
+            checkBenchmarkPreview();
+        }
+
+        function handleExerciseSelectChange() {
+            const sel = document.getElementById('wkExerciseSelect');
+            const customInput = document.getElementById('wkExerciseCustom');
+            if (sel.value === '__custom__') {
+                customInput.classList.remove('hidden');
+                customInput.focus();
+            } else {
+                customInput.classList.add('hidden');
+            }
+            checkBenchmarkPreview();
+        }
+
+        function normalizeExerciseKey(muscle, name) {
+            return `${muscle}_${name.trim().toLowerCase()}`;
+        }
+
+        function computeExerciseScoreMetric(sets, reps, weight) {
+            const effectiveLoad = weight > 0 ? weight : 15;
+            return sets * reps * effectiveLoad;
+        }
+
+        function checkBenchmarkPreview() {
+            const muscle = document.getElementById('wkMuscle').value;
+            const name = getSelectedExerciseName();
+            const sets = parseInt(document.getElementById('wkSets').value) || 1;
+            const reps = parseInt(document.getElementById('wkReps').value) || 1;
+            const weight = parseFloat(document.getElementById('wkWeight').value) || 0;
+
+            const hintEl = document.getElementById('exerciseBenchmarkHint');
+            const tagEl = document.getElementById('progressionStatusTag');
+
+            if (!name) {
+                hintEl.textContent = 'INSERISCI NOME';
+                tagEl.textContent = 'ATTESA DATI';
+                return;
+            }
+
+            const key = normalizeExerciseKey(muscle, name);
+            const prev = appState.exerciseBenchmarks[key];
+
+            if (!prev) {
+                hintEl.textContent = 'PRIMA VOLTA';
+                tagEl.className = 'font-mono text-[10px] px-2.5 py-1.5 rounded bg-[#0e1013] border border-[#272b35] text-gray-300 flex-1 truncate';
+                tagEl.textContent = 'NUOVO BENCHMARK (+XP BASE)';
+                return;
+            }
+
+            hintEl.textContent = `PREC: ${prev.sets}x${prev.reps} @ ${prev.weight}KG`;
+            const currentMetric = computeExerciseScoreMetric(sets, reps, weight);
+
+            if (currentMetric > prev.metric) {
+                tagEl.className = 'font-mono text-[10px] px-2.5 py-1.5 rounded bg-ember/15 border border-ember/50 text-ember font-bold flex-1 truncate';
+                tagEl.textContent = '★ PROGRESSIONE (+30% BONUS XP)';
+            } else if (currentMetric === prev.metric) {
+                tagEl.className = 'font-mono text-[10px] px-2.5 py-1.5 rounded bg-emerald-950/50 border border-emerald-700/50 text-emerald-400 flex-1 truncate';
+                tagEl.textContent = '✓ STANDARD MANTENUTO (+10% XP)';
+            } else {
+                tagEl.className = 'font-mono text-[10px] px-2.5 py-1.5 rounded bg-[#0e1013] border border-[#272b35] text-gray-400 flex-1 truncate';
+                tagEl.textContent = 'VOLUME INFERIORE (SOLO XP BASE)';
+            }
+        }
+
+        function startWorkoutSession() {
+            activeSession.isRunning = true;
+            activeSession.startTime = Date.now();
+            activeSession.exercises = [];
+
+            document.getElementById('sessionStartCard').classList.add('hidden');
+            document.getElementById('activeSessionContainer').classList.remove('hidden');
+            document.getElementById('sessionCompletedCard').classList.remove('hidden');
+            document.getElementById('lastSessionSummaryCard').classList.add('hidden');
+            document.getElementById('headerActiveSessionBadge').classList.remove('hidden');
+            document.getElementById('headerActiveSessionBadge').classList.add('flex');
+
+            updateExerciseSuggestions();
+            renderSessionExerciseList();
+
+            clearInterval(activeSession.timerInterval);
+            activeSession.timerInterval = setInterval(() => {
+                const elapsedSec = Math.floor((Date.now() - activeSession.startTime) / 1000);
+                const mm = String(Math.floor(elapsedSec / 60)).padStart(2, '0');
+                const ss = String(elapsedSec % 60).padStart(2, '0');
+                document.getElementById('sessionDurationDisplay').textContent = `${mm}:${ss}`;
+                document.getElementById('headerSessionClock').textContent = `${mm}:${ss}`;
+            }, 1000);
+
+            showToast('SESSIONE AVVIATA');
+        }
+
+        function addExerciseToSession() {
+            const muscle = document.getElementById('wkMuscle').value;
+            const name = getSelectedExerciseName();
+            const sets = parseInt(document.getElementById('wkSets').value) || 0;
+            const reps = parseInt(document.getElementById('wkReps').value) || 0;
+            const weight = parseFloat(document.getElementById('wkWeight').value) || 0;
+
+            if (!name || sets <= 0 || reps <= 0) {
+                showToast('COMPILA ESERCIZIO, SET E RIPETIZIONI');
+                return;
+            }
+
+            activeSession.exercises.push({
+                id: Date.now() + Math.random(),
+                muscle,
+                name,
+                sets,
+                reps,
+                weight
+            });
+
+            renderSessionExerciseList();
+            showToast(`AGGIUNTO: ${name.toUpperCase()}`);
+        }
+
+        function removeExerciseFromSession(id) {
+            activeSession.exercises = activeSession.exercises.filter(item => item.id !== id);
+            renderSessionExerciseList();
+        }
+
+        function renderSessionExerciseList() {
+            const listEl = document.getElementById('sessionExerciseList');
+            const countEl = document.getElementById('sessionLogCount');
+            const volEl = document.getElementById('sessionTotalVolume');
+
+            countEl.textContent = activeSession.exercises.length;
+            const totalVol = activeSession.exercises.reduce((acc, ex) => acc + (ex.sets * ex.reps * ex.weight), 0);
+            volEl.textContent = `VOL: ${Math.round(totalVol)} KG`;
+
+            if (activeSession.exercises.length === 0) {
+                listEl.innerHTML = `<p class="text-xs text-gray-500 text-center py-4 font-mono">Nessun esercizio registrato. Aggiungi il primo qui sopra.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = activeSession.exercises.map(ex => {
+                const mLabel = MUSCLE_INFO[ex.muscle]?.label || ex.muscle;
+                return `
+                    <div class="bg-[#0e1013] border border-[#272b35] rounded-lg px-3 py-2 flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-ember/15 text-ember border border-ember/30">${mLabel}</span>
+                                <span class="font-display text-sm font-bold uppercase text-white truncate">${ex.name}</span>
+                            </div>
+                            <p class="font-mono text-[11px] text-gray-400 mt-0.5">
+                                ${ex.sets} SET × ${ex.reps} REP ${ex.weight > 0 ? `• <span class="text-gray-200 font-bold">${ex.weight} KG</span>` : '• CORPO LIBERO'}
+                            </p>
+                        </div>
+                        <button onclick="removeExerciseFromSession(${ex.id})" class="btn-steel w-7 h-7 rounded flex items-center justify-center text-gray-400 hover:text-red-400 font-mono text-xs shrink-0 spark-trigger">
+                            ✕
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function finishWorkoutSessionAndCalculateXP() {
+            if (activeSession.exercises.length === 0) {
+                clearInterval(activeSession.timerInterval);
+                activeSession.isRunning = false;
+                document.getElementById('activeSessionContainer').classList.add('hidden');
+                document.getElementById('sessionCompletedCard').classList.add('hidden');
+                document.getElementById('sessionStartCard').classList.remove('hidden');
+                document.getElementById('headerActiveSessionBadge').classList.add('hidden');
+                renderLastWorkoutSummary();
+                showToast('SESSIONE ANNULLATA (0 ESERCIZI)');
+                return;
+            }
+
+            const xpGainedByMuscle = {};
+            const breakdownDetails = [];
+            let totalSessionXP = 0;
+
+            const groupedByExercise = {};
+            for (const item of activeSession.exercises) {
+                const key = normalizeExerciseKey(item.muscle, item.name);
+                if (!groupedByExercise[key]) {
+                    groupedByExercise[key] = {
+                        muscle: item.muscle,
+                        name: item.name,
+                        totalSets: 0,
+                        totalReps: 0,
+                        maxWeight: 0,
+                        totalMetric: 0
+                    };
+                }
+                const g = groupedByExercise[key];
+                g.totalSets += item.sets;
+                g.totalReps += item.sets * item.reps;
+                g.maxWeight = Math.max(g.maxWeight, item.weight);
+                g.totalMetric += computeExerciseScoreMetric(item.sets, item.reps, item.weight);
+            }
+
+            const varietyBonus = Object.keys(groupedByExercise).length >= 3 ? 1.06 : 1.0;
+
+            for (const key of Object.keys(groupedByExercise)) {
+                const ex = groupedByExercise[key];
+                const prev = appState.exerciseBenchmarks[key];
+
+                const cappedSets = Math.min(ex.totalSets, 8);
+                const repFactor = Math.min(1.35, Math.max(0.75, (ex.totalReps / ex.totalSets) / 10));
+                const loadFactor = ex.maxWeight > 0 ? Math.min(1.30, 1 + (ex.maxWeight / 250)) : 1.0;
+                let baseXP = cappedSets * 11 * repFactor * loadFactor;
+
+                let statusLabel = 'BASE';
+                let multiplier = 1.0;
+
+                if (!prev) {
+                    statusLabel = 'NUOVO BENCHMARK';
+                    multiplier = 1.12;
+                    appState.exerciseBenchmarks[key] = {
+                        sets: ex.totalSets,
+                        reps: Math.round(ex.totalReps / ex.totalSets),
+                        weight: ex.maxWeight,
+                        metric: ex.totalMetric
+                    };
+                } else if (ex.totalMetric > prev.metric) {
+                    statusLabel = 'PROGRESSIONE ★';
+                    multiplier = 1.30;
+                    appState.exerciseBenchmarks[key] = {
+                        sets: ex.totalSets,
+                        reps: Math.round(ex.totalReps / ex.totalSets),
+                        weight: ex.maxWeight,
+                        metric: ex.totalMetric
+                    };
+                } else if (ex.totalMetric === prev.metric) {
+                    statusLabel = 'COSTANZA ✓';
+                    multiplier = 1.10;
+                } else {
+                    statusLabel = 'MANTENIMENTO';
+                    multiplier = 0.95;
+                }
+
+                const organicJitter = 0.94 + Math.random() * 0.12;
+                const earnedXP = Math.max(8, Math.round(baseXP * multiplier * varietyBonus * organicJitter));
+
+                xpGainedByMuscle[ex.muscle] = (xpGainedByMuscle[ex.muscle] || 0) + earnedXP;
+                totalSessionXP += earnedXP;
+
+                breakdownDetails.push({
+                    name: ex.name,
+                    muscleLabel: MUSCLE_INFO[ex.muscle]?.label || ex.muscle,
+                    xp: earnedXP,
+                    status: statusLabel
+                });
+            }
+
+            let rankUps = [];
+            for (const muscleKey of Object.keys(xpGainedByMuscle)) {
+                const stat = appState.stats[muscleKey];
+                const oldRank = getRankForLevel(stat.level).name;
+                stat.xp += xpGainedByMuscle[muscleKey];
+
+                while (stat.xp >= getXpNeededForNextLevel(stat.level)) {
+                    stat.xp -= getXpNeededForNextLevel(stat.level);
+                    stat.level += 1;
+                }
+
+                const newRank = getRankForLevel(stat.level).name;
+                if (newRank !== oldRank) {
+                    rankUps.push(`${MUSCLE_INFO[muscleKey].label}: ${newRank.toUpperCase()}`);
+                }
+            }
+
+            appState.lastWorkoutTimestamp = Date.now();
+            appState.simulatedInactiveDays = null;
+            appState.sessionsCompleted = (appState.sessionsCompleted || 0) + 1;
+            appState.lastWorkoutSummary = {
+                totalXP: totalSessionXP,
+                details: breakdownDetails,
+                rankUps
+            };
+
+            saveState();
+
+            clearInterval(activeSession.timerInterval);
+            activeSession.isRunning = false;
+            activeSession.exercises = [];
+            document.getElementById('activeSessionContainer').classList.add('hidden');
+            document.getElementById('sessionCompletedCard').classList.add('hidden');
+            document.getElementById('sessionStartCard').classList.remove('hidden');
+            document.getElementById('headerActiveSessionBadge').classList.add('hidden');
+
+            renderLastWorkoutSummary();
+            showToast(rankUps.length > 0 ? `RANK UP! ${rankUps[0]}` : `SESSIONE COMPLETATA: +${totalSessionXP} XP`);
+        }
+
+        function renderLastWorkoutSummary() {
+            const card = document.getElementById('lastSessionSummaryCard');
+            const summary = appState.lastWorkoutSummary;
+            if (!summary || activeSession.isRunning) {
+                card.classList.add('hidden');
+                return;
+            }
+            card.classList.remove('hidden');
+            document.getElementById('summaryTotalXpBadge').textContent = `+${summary.totalXP} XP`;
+
+            const list = document.getElementById('summaryBreakdownList');
+            list.innerHTML = summary.details.map(d => `
+                <div class="flex items-center justify-between bg-[#0e1013] border border-[#252932] px-2.5 py-1.5 rounded-lg">
+                    <div class="truncate pr-2">
+                        <span class="font-display font-bold uppercase text-white">${d.name}</span>
+                        <span class="font-mono text-[10px] text-gray-400 ml-1">(${d.muscleLabel})</span>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <span class="font-mono text-[9px] ${d.status.includes('★') ? 'text-ember font-bold' : 'text-gray-400'}">${d.status}</span>
+                        <span class="font-mono text-xs font-bold text-white">+${d.xp} XP</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =========================================================
+        // 5. TIMER DI RECUPERO PERSONALIZZABILE
+        // =========================================================
+        let restConfigSeconds = 90;
+        let restRemainingSeconds = 90;
+        let restInterval = null;
+        let isRestRunning = false;
+
+        function formatSecondsMMSS(sec) {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function updateRestDisplay() {
+            document.getElementById('restTimerDisplay').textContent = formatSecondsMMSS(restRemainingSeconds);
+            const pct = restConfigSeconds > 0 ? Math.max(0, Math.min(100, (restRemainingSeconds / restConfigSeconds) * 100)) : 0;
+            document.getElementById('restProgressBar').style.width = `${pct}%`;
+        }
+
+        function setRestPreset(seconds) {
+            clearInterval(restInterval);
+            isRestRunning = false;
+            restConfigSeconds = seconds;
+            restRemainingSeconds = seconds;
+            document.getElementById('btnStartRest').innerHTML = '<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>AVVIA RECUPERO</span>';
+            updateRestDisplay();
+        }
+
+        function changeRestSeconds(delta) {
+            restConfigSeconds = Math.max(15, Math.min(600, restConfigSeconds + delta));
+            restRemainingSeconds = Math.max(0, restRemainingSeconds + delta);
+            if (!isRestRunning) restRemainingSeconds = restConfigSeconds;
+            updateRestDisplay();
+        }
+
+        function toggleRestTimer() {
+            const btn = document.getElementById('btnStartRest');
+            if (isRestRunning) {
+                clearInterval(restInterval);
+                isRestRunning = false;
+                btn.innerHTML = '<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>RIPRENDI RECUPERO</span>';
+                return;
+            }
+
+            if (restRemainingSeconds <= 0) restRemainingSeconds = restConfigSeconds;
+            isRestRunning = true;
+            btn.innerHTML = '<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg><span>PAUSA RECUPERO</span>';
+
+            clearInterval(restInterval);
+            restInterval = setInterval(() => {
+                restRemainingSeconds--;
+                updateRestDisplay();
+
+                if (restRemainingSeconds <= 0) {
+                    clearInterval(restInterval);
+                    isRestRunning = false;
+                    restRemainingSeconds = restConfigSeconds;
+                    updateRestDisplay();
+                    btn.innerHTML = '<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>AVVIA RECUPERO</span>';
+                    playRestEndAlarm();
+                    if (navigator.vibrate) navigator.vibrate([180, 90, 180]);
+                    showToast('RECUPERO TERMINATO — PRONTO PER LA PROSSIMA SERIE');
+                }
+            }, 1000);
+        }
+
+        function resetRestTimer() {
+            clearInterval(restInterval);
+            isRestRunning = false;
+            restRemainingSeconds = restConfigSeconds;
+            document.getElementById('btnStartRest').innerHTML = '<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>AVVIA RECUPERO</span>';
+            updateRestDisplay();
+        }
+
+        // =========================================================
+        // 6. STATISTICHE RPG, MAPPA ANATOMICA & SISTEMA RUGGINE
+        // =========================================================
+        function renderStatsScreen() {
+            const muscleKeys = Object.keys(appState.stats);
+            let totalLevels = 0;
+            muscleKeys.forEach(k => totalLevels += appState.stats[k].level);
+            const overallLvl = Math.max(1, Math.floor(totalLevels / muscleKeys.length));
+
+            document.getElementById('rpgOverallLevel').textContent = overallLvl;
+
+            const titles = [
+                { min: 1, title: 'APPRENDISTA DEL FERRO' },
+                { min: 5, title: 'FABBRO DELL\'ACCIAIO' },
+                { min: 12, title: 'GUERRIERO DELLA FORGIA' },
+                { min: 22, title: 'COLOSSO DI GHISA' },
+                { min: 35, title: 'TITANO INARRESTABILE' },
+                { min: 45, title: 'CAMPIONE OLIMPICO' }
+            ];
+            let currentTitle = titles[0].title;
+            for (const t of titles) {
+                if (overallLvl >= t.min) currentTitle = t.title;
+            }
+            document.getElementById('rpgPlayerTitle').textContent = currentTitle;
+
+            const inactiveDays = getInactiveDays();
+            const isRusted = inactiveDays > 10 && !appState.vacationMode;
+
+            document.getElementById('rpgInactivityInfo').textContent = inactiveDays === 0
+                ? 'Ultimo allenamento: Oggi'
+                : `Inattività: ${inactiveDays} giorn${inactiveDays === 1 ? 'o' : 'i'}`;
+            document.getElementById('simDaysLabel').textContent = `${inactiveDays} GG STOP`;
+
+            // Anello costanza mensile
+            const sessions = appState.sessionsCompleted || 0;
+            const ringPct = Math.min(100, Math.round((sessions / 16) * 100));
+            document.getElementById('sessionsCountBadge').textContent = `${sessions}/16`;
+            document.getElementById('consistencyRingPath').setAttribute('stroke-dasharray', `${ringPct}, 100`);
+
+            const vacBtn = document.getElementById('btnVacationToggle');
+            if (appState.vacationMode) {
+                vacBtn.textContent = 'ATTIVA';
+                vacBtn.classList.add('border-ember', 'text-ember');
+            } else {
+                vacBtn.textContent = 'OFF';
+                vacBtn.classList.remove('border-ember', 'text-ember');
+            }
+
+            const rustBanner = document.getElementById('rustWarningBanner');
+            const rustOverlay = document.getElementById('rustOverlayLayer');
+            const anatomyWrap = document.getElementById('anatomyWrapper');
+
+            if (isRusted) {
+                rustBanner.classList.remove('hidden');
+                rustOverlay.classList.remove('hidden');
+                anatomyWrap.classList.add('rust-filter');
+            } else {
+                rustBanner.classList.add('hidden');
+                rustOverlay.classList.add('hidden');
+                anatomyWrap.classList.remove('rust-filter');
+            }
+
+            ['petto', 'schiena', 'gambe', 'spalle', 'braccia', 'core'].forEach(mKey => {
+                const lvl = appState.stats[mKey].level;
+                const rank = getRankForLevel(lvl);
+                document.querySelectorAll(`[data-muscle="${mKey}"]`).forEach(el => {
+                    el.setAttribute('fill', rank.color);
+                });
+            });
+
+            selectMuscleDetail(selectedMuscle);
+
+            const barsContainer = document.getElementById('statsBarsContainer');
+            barsContainer.innerHTML = muscleKeys.map(mKey => {
+                const stat = appState.stats[mKey];
+                const rank = getRankForLevel(stat.level);
+                const needed = getXpNeededForNextLevel(stat.level);
+                const pct = Math.min(100, Math.round((stat.xp / needed) * 100));
+                const label = MUSCLE_INFO[mKey]?.label || mKey;
+                const medalSvg = getRankMedalSVG(rank.name, rank.color, 26);
+
+                return `
+                    <div onclick="selectMuscleDetail('${mKey}')" class="bg-[#0e1013] border border-[#262a34] hover:border-ember/50 rounded-xl p-2.5 cursor-pointer transition ${isRusted ? 'rust-filter' : ''}">
+                        <div class="flex items-center justify-between gap-2.5">
+                            <div class="shrink-0">${medalSvg}</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between text-xs mb-1">
+                                    <span class="font-display font-bold uppercase text-white tracking-wide truncate">${label}</span>
+                                    <div class="flex items-center gap-2 font-mono text-[10px] shrink-0">
+                                        <span class="font-bold uppercase" style="color: ${rank.color}">${rank.name}</span>
+                                        <span class="text-gray-400">LVL ${stat.level}</span>
+                                    </div>
+                                </div>
+                                <div class="w-full h-1.5 bg-[#181b22] rounded-full overflow-hidden">
+                                    <div class="h-full transition-all duration-300" style="width: ${pct}%; background-color: ${rank.color}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('rankLegendRow').innerHTML = RANKS.map(r => `
+                <div class="bg-[#0e1013] border border-[#272b35] rounded-xl p-2 flex flex-col items-center justify-center text-center gap-1" style="box-shadow: inset 0 1px 0 ${r.color}22;">
+                    ${getRankMedalSVG(r.name, r.color, 28)}
+                    <span class="font-display text-xs font-extrabold uppercase tracking-wide leading-none" style="color: ${r.color}">
+                        ${r.name}
+                    </span>
+                    <span class="font-mono text-[9px] text-gray-500">LVL ${r.minLvl}+</span>
+                </div>
+            `).join('');
+        }
+
+        function selectMuscleDetail(mKey) {
+            selectedMuscle = mKey;
+            const stat = appState.stats[mKey];
+            const rank = getRankForLevel(stat.level);
+            const needed = getXpNeededForNextLevel(stat.level);
+            const pct = Math.min(100, Math.round((stat.xp / needed) * 100));
+
+            document.getElementById('detailMuscleMedal').innerHTML = getRankMedalSVG(rank.name, rank.color, 30);
+            document.getElementById('detailMuscleMedal').style.borderColor = `${rank.color}66`;
+            document.getElementById('detailMuscleName').textContent = (MUSCLE_INFO[mKey]?.label || mKey).toUpperCase();
+            const badge = document.getElementById('detailMuscleRankBadge');
+            badge.textContent = `${rank.name.toUpperCase()} · LVL ${stat.level}`;
+            badge.style.color = rank.color;
+            badge.style.borderColor = rank.color;
+            badge.style.backgroundColor = 'rgba(15, 17, 22, 0.9)';
+
+            document.getElementById('detailMuscleXpText').textContent = `${stat.xp} / ${needed} XP al prossimo livello`;
+            const bar = document.getElementById('detailMuscleProgressBar');
+            bar.style.width = `${pct}%`;
+            bar.style.backgroundColor = rank.color;
+        }
+
+        function toggleVacationMode() {
+            appState.vacationMode = !appState.vacationMode;
+            saveState();
+            renderStatsScreen();
+            showToast(appState.vacationMode ? 'MODALITÀ VACANZA ATTIVA' : 'MODALITÀ VACANZA DISATTIVATA');
+        }
+
+        function simulateInactivityDays(days) {
+            appState.simulatedInactiveDays = days;
+            saveState();
+            renderStatsScreen();
+            showToast(days > 10 ? 'SIMULATI 12 GIORNI DI STOP: RUGGINE ATTIVA' : 'STATISTICHE LUCIDATE');
+        }
+
+        // =========================================================
+        // 7. FORM CHECK AI VISION (FLESSIONI E TRAZIONI)
+        // =========================================================
+        let formExercise = 'pushup';
+        let formRepCount = 0;
+        let formStage = 'up';
+        let cameraActive = false;
+        let videoStream = null;
+        let poseDetector = null;
+        let animFrameId = null;
+
+        function setFormExercise(mode) {
+            formExercise = mode;
+            formRepCount = 0;
+            formStage = mode === 'pushup' ? 'up' : 'down';
+            document.getElementById('formRepCount').textContent = '0';
+            document.getElementById('formRecordDisplay').textContent = `${appState.formRecords[mode] || 0} REP`;
+
+            const btnPush = document.getElementById('btnModePushup');
+            const btnPull = document.getElementById('btnModePullup');
+
+            if (mode === 'pushup') {
+                btnPush.className = 'btn-ember py-2.5 px-3 rounded-lg text-sm flex items-center justify-center gap-2 spark-trigger';
+                btnPull.className = 'btn-steel py-2.5 px-3 rounded-lg font-display text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 spark-trigger';
+                document.getElementById('formInstructionText').textContent =
+                    'Inquadrati di profilo o a 45°. L\'AI rileva l\'angolo del gomito (<90°) e conta solo le flessioni valide.';
+            } else {
+                btnPull.className = 'btn-ember py-2.5 px-3 rounded-lg text-sm flex items-center justify-center gap-2 spark-trigger';
+                btnPush.className = 'btn-steel py-2.5 px-3 rounded-lg font-display text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 spark-trigger';
+                document.getElementById('formInstructionText').textContent =
+                    'Posiziona il telefono per inquadrare sbarra e busto. L\'AI conta la trazione quando il mento supera i polsi.';
+            }
+        }
+
+        function calculateAngle(a, b, c) {
+            const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
+            let angle = Math.abs((radians * 180.0) / Math.PI);
+            if (angle > 180.0) angle = 360 - angle;
+            return Math.round(angle);
+        }
+
+        async function toggleFormCamera() {
+            const btn = document.getElementById('btnToggleCamera');
+            const placeholder = document.getElementById('cameraPlaceholder');
+            const video = document.getElementById('formVideo');
+            const badge = document.getElementById('formStatusBadge');
+
+            if (cameraActive) {
+                cameraActive = false;
+                if (animFrameId) cancelAnimationFrame(animFrameId);
+                if (videoStream) videoStream.getTracks().forEach(t => t.stop());
+                placeholder.classList.remove('hidden');
+                badge.textContent = 'STANDBY';
+                btn.innerHTML = '<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>AVVIA AI</span>';
+                return;
+            }
+
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+                    audio: false
+                });
+                video.srcObject = videoStream;
+                await video.play();
+
+                cameraActive = true;
+                placeholder.classList.add('hidden');
+                badge.textContent = 'AI ATTIVA';
+                btn.innerHTML = '<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg><span>STOP AI</span>';
+
+                if (!poseDetector && typeof Pose !== 'undefined') {
+                    poseDetector = new Pose({
+                        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+                    });
+                    poseDetector.setOptions({
+                        modelComplexity: 1,
+                        smoothLandmarks: true,
+                        minDetectionConfidence: 0.55,
+                        minTrackingConfidence: 0.55
+                    });
+                    poseDetector.onResults(onPoseResults);
+                }
+
+                const processFrame = async () => {
+                    if (!cameraActive) return;
+                    if (poseDetector && video.readyState >= 2) {
+                        await poseDetector.send({ image: video });
+                    }
+                    animFrameId = requestAnimationFrame(processFrame);
+                };
+                processFrame();
+            } catch (err) {
+                showToast('FOTOCAMERA NON DISPONIBILE — USA +1 REP TEST');
+            }
+        }
+
+        function onPoseResults(results) {
+            const canvas = document.getElementById('formCanvas');
+            const ctx = canvas.getContext('2d');
+            const video = document.getElementById('formVideo');
+
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+
+            ctx.save();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+
+            if (results.poseLandmarks) {
+                const lm = results.poseLandmarks;
+                const shoulder = lm[12] || lm[11];
+                const elbow = lm[14] || lm[13];
+                const wrist = lm[16] || lm[15];
+                const nose = lm[0];
+
+                if (shoulder && elbow && wrist) {
+                    const angle = calculateAngle(shoulder, elbow, wrist);
+                    document.getElementById('formAngleBadge').textContent = `ANGOLO: ${angle}°`;
+
+                    ctx.strokeStyle = '#ff5a00';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.moveTo(shoulder.x * canvas.width, shoulder.y * canvas.height);
+                    ctx.lineTo(elbow.x * canvas.width, elbow.y * canvas.height);
+                    ctx.lineTo(wrist.x * canvas.width, wrist.y * canvas.height);
+                    ctx.stroke();
+
+                    [shoulder, elbow, wrist].forEach(pt => {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath();
+                        ctx.arc(pt.x * canvas.width, pt.y * canvas.height, 6, 0, 2 * Math.PI);
+                        ctx.fill();
+                    });
+
+                    if (formExercise === 'pushup') {
+                        if (angle > 155) {
+                            if (formStage === 'down') {
+                                formRepCount++;
+                                document.getElementById('formRepCount').textContent = formRepCount;
+                                document.getElementById('formFeedbackMsg').textContent = 'OTTIMA RIPETIZIONE!';
+                                playMetallicClick();
+                            }
+                            formStage = 'up';
+                        } else if (angle < 92) {
+                            formStage = 'down';
+                            document.getElementById('formFeedbackMsg').textContent = 'PROFONDITÀ RAGGIUNTA — SPINGI!';
+                        } else if (formStage === 'up' && angle < 130) {
+                            document.getElementById('formFeedbackMsg').textContent = 'SCENDI DI PIÙ (<90°)';
+                        }
+                    } else {
+                        if (nose && nose.y < wrist.y) {
+                            formStage = 'up';
+                            document.getElementById('formFeedbackMsg').textContent = 'MENTO SOPRA LA SBARRA!';
+                        } else if (angle > 150 && formStage === 'up') {
+                            formStage = 'down';
+                            formRepCount++;
+                            document.getElementById('formRepCount').textContent = formRepCount;
+                            document.getElementById('formFeedbackMsg').textContent = 'TRAZIONE VALIDA!';
+                            playMetallicClick();
+                        }
+                    }
+                }
+            }
+            ctx.restore();
+        }
+
+        function resetFormCounter() {
+            formRepCount = 0;
+            formStage = formExercise === 'pushup' ? 'up' : 'down';
+            document.getElementById('formRepCount').textContent = '0';
+            document.getElementById('formAngleBadge').textContent = 'ANGOLO: --°';
+            document.getElementById('formFeedbackMsg').textContent = 'PRONTO AL RILEVAMENTO';
+            showToast('CONTATORE FORM AZZERATO');
+        }
+
+        function saveFormSession() {
+            if (formRepCount <= 0) {
+                showToast('NESSUNA RIPETIZIONE DA SALVARE');
+                return;
+            }
+            const currentRec = appState.formRecords[formExercise] || 0;
+            const targetMuscle = formExercise === 'pushup' ? 'petto' : 'schiena';
+
+            const bonusXP = Math.min(45, Math.max(10, formRepCount * 2));
+            const stat = appState.stats[targetMuscle];
+            stat.xp += bonusXP;
+            while (stat.xp >= getXpNeededForNextLevel(stat.level)) {
+                stat.xp -= getXpNeededForNextLevel(stat.level);
+                stat.level += 1;
+            }
+
+            if (formRepCount > currentRec) {
+                appState.formRecords[formExercise] = formRepCount;
+                document.getElementById('formRecordDisplay').textContent = `${formRepCount} REP`;
+                showToast(`NUOVO RECORD (${formRepCount} REP)! +${bonusXP} XP`);
+            } else {
+                showToast(`SESSIONE SALVATA: +${bonusXP} XP A ${MUSCLE_INFO[targetMuscle].label.toUpperCase()}`);
+            }
+
+            appState.lastWorkoutTimestamp = Date.now();
+            appState.simulatedInactiveDays = null;
+            saveState();
+            formRepCount = 0;
+            document.getElementById('formRepCount').textContent = '0';
+        }
+
+        // =========================================================
+        // 8. INIZIALIZZAZIONE
+        // =========================================================
+        window.addEventListener('load', () => {
+            updateExerciseSuggestions();
+            updateRestDisplay();
+            renderLastWorkoutSummary();
+            renderStatsScreen();
+            setFormExercise('pushup');
+        });
+    </script>
+</body>
+</html>
