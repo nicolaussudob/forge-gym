@@ -584,142 +584,139 @@
             <!-- Lista Esercizi della Sessione Corrente -->
             <div id="sessionCompletedCard" class="steel-panel p-4 hidden">
                 <div class="flex items-center justify-between mb-3">
-                    <h3 class="font-display text-sm font-extrabold uppercase tracking-wider text-white">
-                        ESERCIZI REGISTRATI (<span id="sessionLogCount" class="text-ember">0</span>)
-                    </h3>
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-display text-sm font-extrabold uppercase tracking-wider text-white">ESERCIZI SESSIONE</h3>
+                        <span id="sessionLogCount" class="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-ember/15 text-ember border border-ember/40">0</span>
+                    </div>
                     <span id="sessionTotalVolume" class="font-mono text-[10px] text-gray-400">VOL: 0 KG</span>
                 </div>
-                <div id="sessionExerciseList" class="space-y-2 max-h-64 overflow-y-auto pr-1">
-                    <p class="text-xs text-gray-500 text-center py-4">Nessun esercizio registrato. Aggiungi il primo qui sopra.</p>
-                </div>
+                <div id="sessionExerciseList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
             </div>
 
             <!-- Riepilogo Ultima Sessione Completata -->
-            <div id="lastSessionSummaryCard" class="steel-panel p-4 hidden border-ember/55">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="font-display text-xs font-bold text-ember uppercase tracking-wider">ULTIMA SESSIONE COMPLETATA</span>
-                    <span id="summaryTotalXpBadge" class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-lg bg-ember text-[#0b0c0e]">+0 XP</span>
+            <div id="lastSessionSummaryCard" class="steel-panel p-4 hidden">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <span class="font-display text-[10px] font-bold text-ember uppercase tracking-widest block">ULTIMA SESSIONE</span>
+                        <h3 class="font-display text-base font-extrabold uppercase text-white tracking-wide">RIEPILOGO XP OTTENUTI</h3>
+                    </div>
+                    <span id="summaryTotalXpBadge" class="font-mono text-xs font-extrabold px-3 py-1 rounded-xl bg-ember/15 text-ember border border-ember/60">+0 XP</span>
                 </div>
-                <div id="summaryBreakdownList" class="space-y-1.5 text-xs"></div>
+                <div id="summaryBreakdownList" class="space-y-1.5"></div>
             </div>
 
         </section>
 
         <!-- ========================================================= -->
-        <!-- TAB 3 (DESTRA): STATISTICHE RPG, CORPO UMANO & RUGGINE     -->
+        <!-- TAB 3 (DESTRA): STATISTICHE RPG & MAPPA MUSCOLARE         -->
         <!-- ========================================================= -->
         <section id="tab-stats" class="tab-view space-y-4">
 
-            <!-- Banner Allerta Ruggine -->
-            <div id="rustWarningBanner" class="hidden steel-panel p-3.5 border-red-500/60 bg-red-950/20">
-                <div class="flex items-start gap-2.5">
-                    <span class="text-red-400 font-mono text-sm font-bold mt-0.5">[!]</span>
-                    <div>
-                        <p class="font-display text-xs font-extrabold uppercase text-red-400 tracking-wider">CORROSIONE DA INATTIVITÀ RILEVATA</p>
-                        <p class="text-[11px] text-gray-300 mt-0.5">
-                            Non ti alleni da più di 10 giorni. Completa una sessione reale per lucidare l'acciaio!
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Intestazione Livello Generale + Modalità Vacanza -->
-            <div class="steel-panel p-4 flex items-center justify-between gap-2">
+            <!-- Card Livello Atleta & Modalità Vacanza -->
+            <div class="steel-panel p-4 flex items-center justify-between">
                 <div>
                     <div class="flex items-center gap-2">
-                        <span class="font-display text-[11px] font-bold text-ember uppercase tracking-wider">LIVELLO ATLETA</span>
-                        <span id="rpgOverallRankBadge" class="font-mono text-[9px] font-bold px-2 py-0.5 rounded-lg bg-[#0c0d0f] border border-steelBorder text-gray-300">WOOD</span>
+                        <span class="font-display text-xs font-bold text-ember uppercase tracking-wider">LIVELLO ATLETA</span>
+                        <span id="rpgOverallRankBadge" class="font-mono text-[10px] font-bold px-2 py-0.5 rounded-lg bg-[#0c0d0f] border border-steelBorder uppercase">WOOD</span>
                     </div>
-                    <div class="flex items-baseline gap-2 mt-0.5">
+                    <div class="flex items-baseline gap-2.5 mt-1">
                         <span id="rpgOverallLevel" class="font-mono text-3xl font-extrabold text-white leading-none">1</span>
-                        <span id="rpgPlayerTitle" class="font-display text-xs font-bold uppercase text-gray-300 tracking-wide">APPRENDISTA DEL FERRO</span>
+                        <span id="rpgPlayerTitle" class="font-display text-sm font-extrabold uppercase text-gray-200 tracking-wide">APPRENDISTA DEL FERRO</span>
                     </div>
-                    <p id="rpgInactivityInfo" class="font-mono text-[10px] text-gray-400 mt-1">Ultimo allenamento: Oggi</p>
+                    <p id="rpgInactivityInfo" class="font-mono text-[10px] text-gray-400 mt-1.5">Ultimo allenamento: Oggi</p>
                 </div>
 
-                <div class="text-right shrink-0">
-                    <span class="font-mono text-[9px] text-gray-400 uppercase block">MODALITÀ VACANZA</span>
-                    <button id="btnVacationToggle" onclick="toggleVacationMode()" class="btn-steel mt-1 px-3 py-1.5 rounded-xl font-mono text-[10px] font-bold uppercase tracking-wider spark-trigger">
+                <div class="text-right">
+                    <span class="font-mono text-[9px] text-gray-400 uppercase block mb-1.5 tracking-wider">MODALITÀ VACANZA</span>
+                    <button id="btnVacationToggle" onclick="toggleVacationMode()" class="btn-steel px-3.5 py-2 rounded-2xl font-mono text-xs font-bold text-gray-300 spark-trigger">
                         OFF
                     </button>
                 </div>
             </div>
 
-            <!-- Mappa Muscolare & Dettaglio -->
+            <!-- Avviso Ruggine (> 10 giorni senza allenamento) -->
+            <div id="rustWarningBanner" class="hidden steel-panel p-3.5 border-red-500/50 bg-red-950/20">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0"></span>
+                    <div>
+                        <p class="font-display text-xs font-extrabold uppercase text-red-400 tracking-wider">CORROSIONE DA INATTIVITÀ</p>
+                        <p class="text-[11px] text-gray-300 mt-0.5">Oltre 10 giorni di stop: completa un allenamento o attiva la Modalità Vacanza per lucidare l'acciaio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Mappa Muscolare Interattiva (Foto PNG Trasparente Fronte & Retro) -->
             <div class="steel-panel p-4">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="font-display text-sm font-extrabold uppercase tracking-wider text-white">MAPPA MUSCOLARE</h3>
-                    <span class="font-mono text-[10px] text-gray-400">TOCCA UN MUSCOLO</span>
+                    <span class="font-mono text-[10px] text-gray-400 uppercase">TOCCA UN MUSCOLO</span>
                 </div>
 
-                <!-- Contenitore Immagine Reale (corpo.png) + Zone Interattive Rank -->
+                <!-- Contenitore Foto PNG Trasparente + Aree Interattive Rank -->
                 <div id="anatomyWrapper" class="relative w-full flex flex-col items-center justify-center py-2 transition-all duration-500">
                     <!-- Layer Overlay Ruggine -->
                     <div id="rustOverlayLayer" class="hidden rust-overlay absolute inset-0 rounded-2xl pointer-events-none z-20"></div>
 
                     <div class="relative w-full max-w-[360px] mx-auto select-none">
-                        <!-- Tua Foto Anatomica Fronte + Retro (carica corpo.png su GitHub accanto a index.html) -->
-                        <img id="anatomicalBodyImg" src="corpo.png" alt="Mappa Muscolare Fronte e Retro"
-                             onload="removeLightBackgroundFromBodyImg(this)"
-                             onerror="this.style.display='none'; document.getElementById('missingBodyImgHint').classList.remove('hidden');"
-                             class="w-full h-auto block rounded-2xl mx-auto drop-shadow-[0_14px_28px_rgba(0,0,0,0.9)]">
-
-                        <!-- Avviso discreto se corpo.png non è ancora stato caricato nella cartella -->
-                        <div id="missingBodyImgHint" class="hidden bg-[#0c0d0f] border border-dashed border-ember/50 rounded-2xl p-5 text-center my-2">
-                            <p class="font-display text-sm font-extrabold uppercase text-ember tracking-wider">CARICA LA FOTO COME "corpo.png"</p>
-                            <p class="text-[11px] text-gray-300 mt-1.5 leading-relaxed">
-                                Salva questa immagine Fronte + Retro con nome <span class="font-mono text-white font-bold">corpo.png</span> nella stessa cartella di <span class="font-mono text-white">index.html</span> su GitHub!
-                            </p>
+                        <!-- Etichette Fronte / Retro -->
+                        <div class="grid grid-cols-2 text-center mb-1">
+                            <span class="font-mono text-[9px] font-bold tracking-[0.2em] text-gray-500 uppercase">FRONTE</span>
+                            <span class="font-mono text-[9px] font-bold tracking-[0.2em] text-gray-500 uppercase">RETRO</span>
                         </div>
 
-                        <!-- Mappa SVG Interattiva Calibrata su Fronte (Sinistra) e Retro (Destra) -->
-                        <svg viewBox="0 0 1000 562" class="absolute inset-0 w-full h-full z-10" style="mix-blend-mode: color;">
-                            <!-- SPALLE (Deltoidi Fronte Sx/Dx + Deltoidi Retro Sx/Dx) -->
-                            <g class="cursor-pointer" onclick="selectMuscleDetail('spalle')">
-                                <!-- Fronte -->
-                                <ellipse data-muscle="spalle" cx="323" cy="144" rx="18" ry="26" transform="rotate(15 323 144)" fill="#8B5A2B" fill-opacity="0.78"/>
-                                <ellipse data-muscle="spalle" cx="441" cy="144" rx="18" ry="26" transform="rotate(-15 441 144)" fill="#8B5A2B" fill-opacity="0.78"/>
-                                <!-- Retro -->
-                                <ellipse data-muscle="spalle" cx="559" cy="144" rx="18" ry="26" transform="rotate(15 559 144)" fill="#8B5A2B" fill-opacity="0.78"/>
-                                <ellipse data-muscle="spalle" cx="677" cy="144" rx="18" ry="26" transform="rotate(-15 677 144)" fill="#8B5A2B" fill-opacity="0.78"/>
-                            </g>
+                        <div class="relative w-full">
+                            <!-- Tua Foto PNG con Sfondo Trasparente -->
+                            <img id="muscleMapImg" src="corpo.png" alt="Mappa Muscolare" class="w-full h-auto block mx-auto drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)]" onerror="this.style.opacity='0.2'">
 
-                            <!-- PETTO (Pettorali Fronte Sx/Dx) -->
-                            <g class="cursor-pointer" onclick="selectMuscleDetail('petto')">
-                                <path data-muscle="petto" d="M338,132 L380,136 L380,175 C362,180 342,174 336,160 Z" fill="#8B5A2B" fill-opacity="0.80"/>
-                                <path data-muscle="petto" d="M426,132 L384,136 L384,175 C402,180 422,174 428,160 Z" fill="#8B5A2B" fill-opacity="0.80"/>
-                            </g>
+                            <!-- Overlay SVG Interattivo per Colorazione Rank & Tocco -->
+                            <svg viewBox="0 0 1000 562" class="absolute inset-0 w-full h-full z-10" style="mix-blend-mode: color;" xmlns="http://www.w3.org/2000/svg">
+                                <!-- ================= FRONTE (SINISTRA) ================= -->
+                                <!-- SPALLE FRONTE -->
+                                <g class="cursor-pointer" onclick="selectMuscleDetail('spalle')">
+                                    <ellipse data-muscle="spalle" cx="312" cy="148" rx="22" ry="20" fill="#8B5A2B" fill-opacity="0.85"/>
+                                    <ellipse data-muscle="spalle" cx="436" cy="148" rx="22" ry="20" fill="#8B5A2B" fill-opacity="0.85"/>
+                                </g>
+                                <!-- PETTO -->
+                                <g class="cursor-pointer" onclick="selectMuscleDetail('petto')">
+                                    <path data-muscle="petto" d="M330,136 L373,142 L373,186 C352,190 332,182 328,166 Z" fill="#8B5A2B" fill-opacity="0.9"/>
+                                    <path data-muscle="petto" d="M418,136 L375,142 L375,186 C396,190 416,182 420,166 Z" fill="#8B5A2B" fill-opacity="0.9"/>
+                                </g>
+                                <!-- BRACCIA FRONTE -->
+                                <g class="cursor-pointer" onclick="selectMuscleDetail('braccia')">
+                                    <path data-muscle="braccia" d="M294,166 L320,170 L306,258 L280,252 Z" fill="#8B5A2B" fill-opacity="0.85"/>
+                                    <path data-muscle="braccia" d="M454,166 L428,170 L442,258 L468,252 Z" fill="#8B5A2B" fill-opacity="0.85"/>
+                                </g>
+                                <!-- CORE / ADDOME -->
+                                <g class="cursor-pointer" onclick="selectMuscleDetail('core')">
+                                    <rect data-muscle="core" x="342" y="188" width="64" height="94" rx="14" fill="#8B5A2B" fill-opacity="0.9"/>
+                                </g>
+                                <!-- GAMBE FRONTE -->
+                                <g class="cursor-pointer" onclick="selectMuscleDetail('gambe')">
+                                    <path data-muscle="gambe" d="M330,278 L372,292 L366,495 L334,495 L324,380 Z" fill="#8B5A2B" fill-opacity="0.88"/>
+                                    <path data-muscle="gambe" d="M418,278 L376,292 L382,495 L414,495 L424,380 Z" fill="#8B5A2B" fill-opacity="0.88"/>
+                                </g>
 
-                            <!-- SCHIENA (Trapezi, Dorsali e Lombari sul Retro) -->
-                            <g class="cursor-pointer" onclick="selectMuscleDetail('schiena')">
-                                <path data-muscle="schiena" d="M594,108 L642,108 L664,138 L654,238 L618,262 L582,238 L572,138 Z" fill="#8B5A2B" fill-opacity="0.78"/>
-                            </g>
-
-                            <!-- BRACCIA (Bicipiti/Avambracci Fronte + Tricipiti/Avambracci Retro) -->
-                            <g class="cursor-pointer" onclick="selectMuscleDetail('braccia')">
-                                <!-- Fronte -->
-                                <path data-muscle="braccia" d="M306,166 L328,170 L308,284 L286,280 Z" fill="#8B5A2B" fill-opacity="0.78"/>
-                                <path data-muscle="braccia" d="M458,166 L436,170 L456,284 L478,280 Z" fill="#8B5A2B" fill-opacity="0.78"/>
-                                <!-- Retro -->
-                                <path data-muscle="braccia" d="M542,166 L564,170 L544,284 L522,280 Z" fill="#8B5A2B" fill-opacity="0.78"/>
-                                <path data-muscle="braccia" d="M694,166 L672,170 L692,284 L714,280 Z" fill="#8B5A2B" fill-opacity="0.78"/>
-                            </g>
-
-                            <!-- CORE (Addominali & Obliqui sul Fronte) -->
-                            <g class="cursor-pointer" onclick="selectMuscleDetail('core')">
-                                <path data-muscle="core" d="M346,178 L418,178 L414,274 L382,296 L350,274 Z" fill="#8B5A2B" fill-opacity="0.80"/>
-                            </g>
-
-                            <!-- GAMBE (Quadricipiti/Polpacci Fronte + Glutei/Femorali/Polpacci Retro) -->
-                            <g class="cursor-pointer" onclick="selectMuscleDetail('gambe')">
-                                <!-- Fronte -->
-                                <path data-muscle="gambe" d="M342,276 L379,298 L374,504 L344,504 L336,368 Z" fill="#8B5A2B" fill-opacity="0.78"/>
-                                <path data-muscle="gambe" d="M422,276 L385,298 L390,504 L420,504 L428,368 Z" fill="#8B5A2B" fill-opacity="0.78"/>
-                                <!-- Retro -->
-                                <path data-muscle="gambe" d="M578,255 L616,265 L612,504 L580,504 L572,368 Z" fill="#8B5A2B" fill-opacity="0.78"/>
-                                <path data-muscle="gambe" d="M658,255 L620,265 L624,504 L656,504 L664,368 Z" fill="#8B5A2B" fill-opacity="0.78"/>
-                            </g>
-                        </svg>
+                                <!-- ================= RETRO (DESTRA) ================= -->
+                                <!-- SPALLE RETRO -->
+                                <g class="cursor-pointer" onclick="selectMuscleDetail('spalle')">
+                                    <ellipse data-muscle="spalle" cx="564" cy="148" rx="22" ry="20" fill="#8B5A2B" fill-opacity="0.85"/>
+                                    <ellipse data-muscle="spalle" cx="688" cy="148" rx="22" ry="20" fill="#8B5A2B" fill-opacity="0.85"/>
+                                </g>
+                                <!-- SCHIENA -->
+                                <g class="cursor-pointer" onclick="selectMuscleDetail('schiena')">
+                                    <path data-muscle="schiena" d="M580,126 L672,126 L662,254 L590,254 Z" fill="#8B5A2B" fill-opacity="0.9"/>
+                                </g>
+                                <!-- BRACCIA RETRO -->
+                                <g class="cursor-pointer" onclick="selectMuscleDetail('braccia')">
+                                    <path data-muscle="braccia" d="M546,166 L572,170 L558,258 L532,252 Z" fill="#8B5A2B" fill-opacity="0.85"/>
+                                    <path data-muscle="braccia" d="M706,166 L680,170 L694,258 L720,252 Z" fill="#8B5A2B" fill-opacity="0.85"/>
+                                </g>
+                                <!-- GAMBE RETRO & GLUTEI -->
+                                <g class="cursor-pointer" onclick="selectMuscleDetail('gambe')">
+                                    <path data-muscle="gambe" d="M584,256 L668,256 L674,380 L664,495 L632,495 L626,330 L620,495 L588,495 L578,380 Z" fill="#8B5A2B" fill-opacity="0.88"/>
+                                </g>
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
@@ -1505,41 +1502,6 @@
         // =========================================================
         // 6. STATISTICHE RPG, MAPPA ANATOMICA & SISTEMA RUGGINE
         // =========================================================
-        function removeLightBackgroundFromBodyImg(imgEl) {
-            if (!imgEl || imgEl.dataset.transparentProcessed === 'true') return;
-            try {
-                const offCanvas = document.createElement('canvas');
-                const w = imgEl.naturalWidth;
-                const h = imgEl.naturalHeight;
-                if (!w || !h) return;
-                offCanvas.width = w;
-                offCanvas.height = h;
-                const offCtx = offCanvas.getContext('2d');
-                offCtx.drawImage(imgEl, 0, 0);
-
-                const imgData = offCtx.getImageData(0, 0, w, h);
-                const data = imgData.data;
-
-                // Rileva automaticamente il colore di sfondo dall'angolo in alto a sinistra
-                const bgR = data[0], bgG = data[1], bgB = data[2];
-
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i], g = data[i + 1], b = data[i + 2];
-                    const dist = Math.hypot(r - bgR, g - bgG, b - bgB);
-                    if (dist < 38) {
-                        data[i + 3] = 0; // Rende trasparente lo sfondo chiaro
-                    } else if (dist < 62) {
-                        // Sfuma morbidamente i bordi per evitare scalettature
-                        data[i + 3] = Math.round(((dist - 38) / 24) * 255);
-                    }
-                }
-
-                offCtx.putImageData(imgData, 0, 0);
-                imgEl.dataset.transparentProcessed = 'true';
-                imgEl.src = offCanvas.toDataURL('image/png');
-            } catch (e) {}
-        }
-
         function renderStatsScreen() {
             const muscleKeys = Object.keys(appState.stats);
             let totalLevels = 0;
