@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FORGE — Raw & Industrial Fitness</title>
+    <title>FORGE — Allenati. Monitora. Migliora.</title>
 
     <!-- Impostazioni PWA / Web App per iPhone e Android -->
     <meta name="apple-mobile-web-app-title" content="FORGE">
@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0e0f11">
+    <meta name="theme-color" content="#0b0c0e">
 
     <!-- Icona App -->
     <link rel="apple-touch-icon" href="icona.png">
@@ -20,10 +20,10 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts: Barlow Condensed, Rajdhani, Inter & JetBrains Mono -->
+    <!-- Google Fonts: Rajdhani, Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
 
     <!-- MediaPipe Pose per AI Vision Form Check -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
@@ -34,18 +34,21 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        display: ['"Barlow Condensed"', 'sans-serif'],
+                        display: ['"Rajdhani"', 'sans-serif'],
                         tech: ['"Rajdhani"', 'sans-serif'],
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['"Inter"', 'sans-serif'],
                         mono: ['"JetBrains Mono"', 'monospace'],
                     },
                     colors: {
-                        forgeBg: '#0e0f11',
-                        steelCard: '#17191d',
-                        steelElevated: '#1f2228',
-                        steelBorder: '#2a2e36',
-                        ember: '#ff5a00',
-                        emberBright: '#ff6b00',
+                        forgeBg: '#0b0c0e',
+                        steelCard: '#141518',
+                        steelElevated: '#1b1d22',
+                        steelBorder: '#24262c',
+                        ember: '#f25c19',
+                        emberBright: '#ff7a3d',
+                        bronzeAccent: '#c2410c',
+                        cyberPink: '#ef4444',
+                        cyberGreen: '#22c55e',
                     }
                 }
             }
@@ -54,10 +57,10 @@
 
     <style>
         :root {
-            --ember: #ff5a00;
-            --ember-bright: #ff6b00;
-            --steel-bg: #17191d;
-            --steel-border: #2a2e36;
+            --ember: #f25c19;
+            --ember-bright: #ff7a3d;
+            --steel-bg: #141518;
+            --steel-border: #24262c;
         }
 
         * {
@@ -66,69 +69,46 @@
         }
 
         body {
-            background-color: #0e0f11;
+            background-color: #090a0c;
             color: #f3f4f6;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             user-select: none;
+            /* Sfondo nero carbone profondo con texture zigrinata a tema acciaio e accenni arancioni molto discreti */
             background-image:
-                radial-gradient(circle at 50% -10%, rgba(255, 90, 0, 0.12), transparent 55%),
-                radial-gradient(circle at 85% 85%, rgba(255, 90, 0, 0.05), transparent 45%),
-                url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 20L20 40L0 20Z' fill='none' stroke='%23ffffff' stroke-opacity='0.024' stroke-width='1'/%3E%3Ccircle cx='20' cy='20' r='1.2' fill='%23ff5a00' fill-opacity='0.06'/%3E%3C/svg%3E");
+                radial-gradient(ellipse at 50% -12%, rgba(242, 92, 25, 0.09) 0%, rgba(194, 65, 12, 0.03) 38%, transparent 65%),
+                radial-gradient(ellipse at 85% 98%, rgba(242, 92, 25, 0.06) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.018) 0px, rgba(255, 255, 255, 0.018) 1px, transparent 1px, transparent 14px),
+                repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.018) 0px, rgba(255, 255, 255, 0.018) 1px, transparent 1px, transparent 14px),
+                linear-gradient(170deg, #090a0c 0%, #0e1013 55%, #07080a 100%);
             background-attachment: fixed;
         }
 
-        /* Pannello Acciaio Spazzolato (Concept Style) */
+        /* Card Scura Arrotondata con Bordo Sottile (Stile Reference) */
         .steel-panel {
             position: relative;
-            background: linear-gradient(165deg, #1d2025 0%, #14161a 60%, #181a1f 100%);
-            border: 1px solid #2e333d;
-            border-radius: 14px;
+            background: linear-gradient(180deg, #17181c 0%, #121316 100%);
+            border: 1px solid #24262c;
+            border-radius: 22px;
             box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.08),
-                inset 0 -2px 6px rgba(0, 0, 0, 0.8),
-                0 12px 26px -6px rgba(0, 0, 0, 0.9);
+                inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                0 14px 32px -12px rgba(0, 0, 0, 0.9);
         }
 
-        /* Piastra angolare metallica con rivetto (come nell'immagine concept) */
-        .corner-plate {
+        /* Illustrazione geometrica bilanciere in penombra sulla card iniziale */
+        .barbell-hero-art {
             position: absolute;
             top: 0;
             right: 0;
-            width: 34px;
-            height: 34px;
-            background: linear-gradient(225deg, #323742 0%, #1c1f26 55%, transparent 56%);
-            border-top-right-radius: 13px;
+            bottom: 0;
+            width: 55%;
             pointer-events: none;
-            z-index: 4;
+            overflow: hidden;
+            border-top-right-radius: 22px;
+            border-bottom-right-radius: 22px;
+            mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.85) 45%, black 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.85) 45%, black 100%);
         }
-        .corner-plate::after {
-            content: '';
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #9ca3af, #1f2937);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.95);
-        }
-
-        /* Rivetti agli angoli */
-        .rivet-tl, .rivet-tr, .rivet-bl, .rivet-br {
-            position: absolute;
-            width: 5.5px;
-            height: 5.5px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #8a92a0, #1c2026 75%);
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.25), 0 1px 2px rgba(0,0,0,0.95);
-            pointer-events: none;
-            z-index: 5;
-        }
-        .rivet-tl { top: 8px; left: 8px; }
-        .rivet-tr { top: 8px; right: 8px; }
-        .rivet-bl { bottom: 8px; left: 8px; }
-        .rivet-br { bottom: 8px; right: 8px; }
 
         /* Contenitore universale per contenere sempre l'onda d'urto dentro il pulsante */
         .spark-trigger {
@@ -136,82 +116,79 @@
             overflow: hidden;
         }
 
-        /* Pulsante Principale Pieno Arancio (Concept Style: ▶ INIZIA ALLENAMENTO) */
+        /* Pulsante Principale Arancione Pieno con Testo Scuro (Come nello screenshot) */
         .btn-ember {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(180deg, #ff6b00 0%, #e65100 100%);
-            border: 1px solid #ff8c3a;
+            background: linear-gradient(180deg, #f96822 0%, #e6510e 100%);
+            border: 1px solid #ff8447;
             color: #0b0c0e;
-            font-family: 'Barlow Condensed', sans-serif;
+            font-family: 'Rajdhani', sans-serif;
             font-weight: 800;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
             will-change: transform;
             box-shadow:
                 inset 0 1px 0 rgba(255, 255, 255, 0.35),
-                0 4px 16px rgba(255, 90, 0, 0.35),
-                0 3px 0 #8a2c00;
-            transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.16s ease, filter 0.16s ease;
+                0 8px 22px -6px rgba(242, 92, 25, 0.55);
+            transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.15s ease, box-shadow 0.15s ease;
         }
         .btn-ember:hover {
             filter: brightness(1.06);
         }
         .btn-ember:active {
-            transform: translateY(2px) scale(0.975);
-            box-shadow:
-                inset 0 1px 2px rgba(0, 0, 0, 0.35),
-                0 2px 8px rgba(255, 90, 0, 0.22),
-                0 1px 0 #8a2c00;
+            transform: scale(0.98);
+            filter: brightness(0.95);
         }
 
-        /* Pulsante Secondario Acciaio */
+        /* Pulsante Secondario Antracite Arrotondato */
         .btn-steel {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(180deg, #282c36 0%, #191b22 100%);
-            border: 1px solid #383e4b;
+            background: linear-gradient(180deg, #1d1f24 0%, #16181c 100%);
+            border: 1px solid #282b32;
             color: #e5e7eb;
             will-change: transform;
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.09),
-                0 2px 0 #0a0b0d;
-            transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.16s ease, background 0.16s ease;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.15s ease, color 0.15s ease;
+        }
+        .btn-steel:hover {
+            border-color: rgba(242, 92, 25, 0.55);
+            color: #ffffff;
         }
         .btn-steel:active {
-            transform: translateY(2px) scale(0.975);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7);
-            border-color: #ff5a00;
+            transform: scale(0.97);
+            border-color: #f25c19;
         }
 
-        /* Effetto Onda d'Urto al Click (GPU-accelerated) */
+        /* Effetto Onda Morbida al Click */
         .ripple-wave {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(255, 110, 20, 0.22) 55%, transparent 75%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.38) 0%, rgba(242, 92, 25, 0.2) 55%, transparent 75%);
             transform: scale(0);
             will-change: transform, opacity;
-            animation: rippleExpand 0.46s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: rippleExpand 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             pointer-events: none;
             z-index: 20;
         }
         @keyframes rippleExpand {
             to {
-                transform: scale(2.8);
+                transform: scale(2.5);
                 opacity: 0;
             }
         }
 
-        /* Particelle Scintille Volanti (GPU-accelerated, zero layout shift) */
+        /* Scintille Arancioni al Tocco */
         .spark-particle {
             position: fixed;
             top: 0;
             left: 0;
-            width: 4px;
-            height: 4px;
+            width: 3.5px;
+            height: 3.5px;
             border-radius: 50%;
-            background: #ffb36b;
-            box-shadow: 0 0 6px #ff5a00, 0 0 10px #ffae00;
+            background: #ff9c66;
+            box-shadow: 0 0 6px #f25c19;
             pointer-events: none;
             will-change: transform, opacity;
             z-index: 9999;
@@ -219,7 +196,7 @@
         }
         @keyframes sparkFly {
             0% {
-                opacity: 1;
+                opacity: 0.95;
                 transform: translate3d(var(--sx), var(--sy), 0) scale(1.1);
             }
             100% {
@@ -228,30 +205,29 @@
             }
         }
 
-        /* Display Numerico Digitale */
+        /* Display Numerico Cronometro Scuro (Come nello screenshot) */
         .digital-readout {
-            background: #0a0b0e;
-            border: 1px solid #272b35;
-            box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.92), 0 1px 0 rgba(255, 255, 255, 0.05);
+            background: #0c0d0f;
+            border: 1px solid #22242a;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.85);
             font-variant-numeric: tabular-nums;
         }
 
         /* Effetto Ruggine per inattività (> 10 giorni) */
         .rust-overlay {
             background-image:
-                radial-gradient(circle at 25% 30%, rgba(124, 45, 18, 0.45), transparent 55%),
-                radial-gradient(circle at 75% 70%, rgba(154, 52, 18, 0.4), transparent 55%),
-                repeating-linear-gradient(45deg, rgba(67, 20, 7, 0.25) 0px, rgba(67, 20, 7, 0.25) 3px, transparent 3px, transparent 7px);
-            mix-blend-mode: multiply;
+                radial-gradient(circle at 30% 25%, rgba(180, 83, 9, 0.26), transparent 55%),
+                radial-gradient(circle at 72% 72%, rgba(124, 45, 18, 0.26), transparent 55%);
+            mix-blend-mode: screen;
         }
         .rust-filter {
-            filter: sepia(0.75) saturate(0.55) brightness(0.72) contrast(1.1);
+            filter: sepia(0.45) saturate(0.85) brightness(0.76) contrast(1.08);
         }
 
         /* Transizioni Tab */
         .tab-view {
             display: none;
-            animation: viewEnter 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: viewEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .tab-view.active {
             display: block;
@@ -259,7 +235,7 @@
         @keyframes viewEnter {
             from {
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateY(6px);
             }
             to {
                 opacity: 1;
@@ -269,55 +245,56 @@
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: #0e0f11; }
-        ::-webkit-scrollbar-thumb { background: #323742; border-radius: 99px; }
+        ::-webkit-scrollbar-track { background: #0b0c0e; }
+        ::-webkit-scrollbar-thumb { background: #282b32; border-radius: 4px; }
 
         /* Input scuri */
         input, select {
-            background-color: #0b0c0e;
-            border: 1px solid #2c313c;
+            background-color: #0c0d0f;
+            border: 1px solid #24262c;
             color: #f3f4f6;
             outline: none;
-            transition: border-color 0.15s ease;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
         }
         input:focus, select:focus {
-            border-color: #ff5a00;
+            border-color: #f25c19;
+            box-shadow: 0 0 0 2px rgba(242, 92, 25, 0.18);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col pb-24">
+<body class="min-h-screen flex flex-col pb-28">
 
     <!-- ========================================================= -->
-    <!-- TOP HEADER INDUSTRIALE (STILE CONCEPT)                    -->
+    <!-- TOP HEADER (IDENTICO ALLO SCREENSHOT DI RIFERIMENTO)      -->
     <!-- ========================================================= -->
-    <header class="sticky top-0 z-30 bg-[#0e0f11]/95 backdrop-blur-md border-b border-[#252932] px-4 py-3">
+    <header class="sticky top-0 z-30 bg-[#0d0e11]/85 backdrop-blur-md border-b border-white/[0.04] px-4 pt-3.5 pb-2.5">
         <div class="max-w-lg mx-auto flex items-center justify-between">
-            <!-- Logo FORGE stile concept -->
-            <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#2a2f39] to-[#121418] border border-[#3e4554] flex items-center justify-center shadow-inner relative">
-                    <svg class="w-5 h-5 text-ember" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>
+            <!-- Logo FORGE PRO con Fulmine Arancione -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-[#16181c] border border-[#25272e] flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                    <svg class="w-5 h-5 text-ember fill-current" viewBox="0 0 24 24">
+                        <path d="M13 2L4.5 13.5h6L9 22l9.5-11.5h-6L13 2z"/>
                     </svg>
                 </div>
                 <div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="font-display text-2xl font-extrabold tracking-wider text-white leading-none">FORGE</span>
-                        <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-ember/20 text-ember border border-ember/40">PRO</span>
+                    <div class="flex items-center gap-2">
+                        <span class="font-display text-2xl font-extrabold tracking-wide text-white leading-none">FORGE</span>
+                        <span class="text-[10px] font-display font-bold px-2 py-0.5 rounded-md bg-ember/15 text-ember border border-ember/70 tracking-wider leading-none">PRO</span>
                     </div>
-                    <p class="font-tech text-[11px] font-semibold tracking-widest text-gray-400 uppercase leading-none mt-0.5">
+                    <p class="font-sans text-[9px] font-semibold tracking-[0.16em] text-gray-400 uppercase leading-none mt-1.5">
                         ALLENATI. MONITORA. MIGLIORA.
                     </p>
                 </div>
             </div>
 
-            <!-- Orologio Digitale (come in alto a destra nel concept) -->
-            <div class="flex items-center gap-2.5">
-                <div id="headerActiveSessionBadge" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-md bg-ember/15 border border-ember/40">
-                    <span class="w-2 h-2 rounded-full bg-ember animate-ping"></span>
+            <!-- Pillola Orologio Digitale in alto a destra -->
+            <div class="flex items-center gap-2">
+                <div id="headerActiveSessionBadge" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-full bg-ember/15 border border-ember/60">
+                    <span class="w-1.5 h-1.5 rounded-full bg-ember animate-pulse"></span>
                     <span id="headerSessionClock" class="font-mono text-xs font-bold text-ember">00:00</span>
                 </div>
-                <div class="digital-readout px-2.5 py-1.5 rounded-lg text-right">
-                    <span id="liveClock" class="font-mono text-sm font-bold text-gray-200 tracking-wider block leading-none">16:42</span>
+                <div class="bg-[#15171b] border border-[#24262c] px-4 py-1.5 rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                    <span id="liveClock" class="font-mono text-xs font-semibold text-gray-300 tracking-wider block leading-none">06:44</span>
                 </div>
             </div>
         </div>
@@ -326,7 +303,7 @@
     <!-- ========================================================= -->
     <!-- CONTENUTO PRINCIPALE (MAX WIDTH MOBILE-FIRST)             -->
     <!-- ========================================================= -->
-    <main class="flex-1 w-full max-w-lg mx-auto px-4 pt-4 space-y-4">
+    <main class="flex-1 w-full max-w-lg mx-auto px-4 pt-2 space-y-4">
 
         <!-- ========================================================= -->
         <!-- TAB 1 (SINISTRA): FORM CHECK AI VISION (FLESSIONI/TRAZIONI)-->
@@ -334,85 +311,88 @@
         <section id="tab-form" class="tab-view space-y-4">
 
             <!-- Selettore Esercizio + Record -->
-            <div class="steel-panel p-4">
-                <div class="corner-plate"></div>
-                <span class="rivet-tl"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
-
-                <div class="flex items-center justify-between mb-3 pr-5">
+            <div class="steel-panel p-5">
+                <div class="flex items-center justify-between mb-3.5">
                     <div>
-                        <span class="font-tech text-xs font-bold text-ember uppercase tracking-widest">BIOMECHANICAL SCANNER</span>
-                        <h2 class="font-display text-2xl font-extrabold uppercase tracking-wide text-white leading-none">FORM CHECK AI</h2>
+                        <span class="font-display text-[11px] font-bold text-ember uppercase tracking-[0.14em]">ANALISI BIOMECCANICA</span>
+                        <h2 class="font-display text-2xl font-extrabold uppercase tracking-wide text-white leading-none mt-0.5">FORM CHECK AI</h2>
                     </div>
-                    <div class="digital-readout px-3 py-1.5 rounded-lg text-right">
-                        <span class="font-mono text-[9px] text-gray-400 uppercase block">RECORD PERSONALE</span>
-                        <span id="formRecordDisplay" class="font-display text-lg font-extrabold text-ember leading-none">0 REP</span>
+                    <div class="digital-readout px-3.5 py-2 rounded-2xl text-right">
+                        <span class="font-mono text-[9px] text-gray-400 uppercase block tracking-wider">RECORD</span>
+                        <span id="formRecordDisplay" class="font-mono text-sm font-bold text-ember leading-none">0 REP</span>
                     </div>
                 </div>
 
                 <!-- Switch Flessioni / Trazioni -->
                 <div class="grid grid-cols-2 gap-2.5">
-                    <button id="btnModePushup" onclick="setFormExercise('pushup')" class="btn-ember py-2.5 px-3 rounded-lg text-sm flex items-center justify-center gap-2 spark-trigger">
+                    <button id="btnModePushup" onclick="setFormExercise('pushup')" class="btn-ember py-3 px-3 rounded-2xl text-sm flex items-center justify-center gap-2 spark-trigger">
                         <span>FLESSIONI</span>
                     </button>
-                    <button id="btnModePullup" onclick="setFormExercise('pullup')" class="btn-steel py-2.5 px-3 rounded-lg font-display text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 spark-trigger">
+                    <button id="btnModePullup" onclick="setFormExercise('pullup')" class="btn-steel py-3 px-3 rounded-2xl font-display text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 spark-trigger">
                         <span>TRAZIONI</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Visore Fotocamera + Scheletro AI -->
-            <div class="steel-panel p-3 overflow-hidden">
-                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
-
-                <div class="relative w-full aspect-[4/3] bg-[#08090b] rounded-lg overflow-hidden border border-[#272b35] flex items-center justify-center">
+            <!-- Visore Fotocamera -->
+            <div class="steel-panel p-3.5 overflow-hidden">
+                <div class="relative w-full aspect-[4/3] bg-[#0b0c0e] rounded-2xl overflow-hidden border border-steelBorder flex items-center justify-center">
                     <video id="formVideo" class="hidden w-full h-full object-cover scale-x-[-1]" playsinline muted></video>
                     <canvas id="formCanvas" class="w-full h-full object-cover scale-x-[-1]"></canvas>
 
+                    <!-- Mirino agli angoli -->
+                    <div class="absolute inset-3 pointer-events-none">
+                        <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-ember/70 rounded-tl"></div>
+                        <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-ember/70 rounded-tr"></div>
+                        <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-ember/70 rounded-bl"></div>
+                        <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-ember/70 rounded-br"></div>
+                    </div>
+
                     <!-- Placeholder quando la camera è spenta -->
-                    <div id="cameraPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center p-5 text-center bg-[#090a0d]/95">
-                        <div class="w-12 h-12 rounded-xl bg-[#181b22] border border-[#2f3542] flex items-center justify-center mb-3 text-ember">
+                    <div id="cameraPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center p-5 text-center bg-[#0c0d0f]/95">
+                        <div class="w-12 h-12 rounded-2xl bg-[#17191e] border border-ember/40 flex items-center justify-center mb-3 text-ember">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                             </svg>
                         </div>
-                        <p class="font-display text-base font-bold uppercase text-white tracking-wide">APPOGGIA IL TELEFONO A TERRA</p>
-                        <p id="formInstructionText" class="text-xs text-gray-400 mt-1 max-w-xs">
+                        <p class="font-display text-base font-extrabold uppercase text-white tracking-wider">POSIZIONA FOTOCAMERA</p>
+                        <p id="formInstructionText" class="text-xs text-gray-400 mt-1.5 max-w-xs leading-relaxed">
                             Inquadrati di profilo o a 45°. L'AI rileva l'angolo del gomito (&lt;90°) e conta solo le flessioni valide.
                         </p>
                     </div>
 
                     <!-- HUD Sovrapposto -->
                     <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
-                        <span id="formStatusBadge" class="px-2.5 py-1 rounded bg-black/80 border border-white/10 font-mono text-[10px] font-bold uppercase text-gray-300">
+                        <span id="formStatusBadge" class="px-2.5 py-1 rounded-xl bg-[#0b0c0e]/85 border border-steelBorder font-mono text-[10px] font-bold uppercase text-gray-300">
                             STANDBY
                         </span>
-                        <span id="formAngleBadge" class="px-2.5 py-1 rounded bg-black/80 border border-ember/40 font-mono text-[10px] font-bold text-ember">
+                        <span id="formAngleBadge" class="px-2.5 py-1 rounded-xl bg-[#0b0c0e]/85 border border-ember/45 font-mono text-[10px] font-bold text-ember">
                             ANGOLO: --°
                         </span>
                     </div>
 
                     <!-- Contatore Gigante in basso -->
                     <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-end justify-between pointer-events-none">
-                        <div class="bg-black/85 border border-[#2d323e] px-3 py-1.5 rounded-lg">
+                        <div class="bg-[#0b0c0e]/90 border border-steelBorder px-3 py-1.5 rounded-xl">
                             <span class="font-mono text-[9px] text-gray-400 uppercase block">ESECUZIONE</span>
-                            <span id="formFeedbackMsg" class="font-tech text-sm font-bold text-white uppercase">PRONTO AL RILEVAMENTO</span>
+                            <span id="formFeedbackMsg" class="font-display text-xs font-bold text-white uppercase tracking-wide">PRONTO AL RILEVAMENTO</span>
                         </div>
-                        <div class="bg-black/90 border border-ember/60 px-3.5 py-1 rounded-lg text-right shadow-lg">
+                        <div class="bg-[#0b0c0e]/95 border border-ember px-3.5 py-1.5 rounded-xl text-right">
                             <span class="font-mono text-[9px] text-ember uppercase block">REP VALIDE</span>
-                            <span id="formRepCount" class="font-display text-3xl font-extrabold text-white leading-none">0</span>
+                            <span id="formRepCount" class="font-mono text-2xl font-extrabold text-white leading-none">0</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Controlli Scanner -->
                 <div class="grid grid-cols-3 gap-2 mt-3">
-                    <button id="btnToggleCamera" onclick="toggleFormCamera()" class="btn-ember py-2.5 px-2 rounded-lg text-xs flex items-center justify-center gap-1.5 spark-trigger">
+                    <button id="btnToggleCamera" onclick="toggleFormCamera()" class="btn-ember py-3 px-2 rounded-2xl text-xs flex items-center justify-center gap-1.5 spark-trigger">
                         <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>AVVIA AI</span>
                     </button>
-                    <button onclick="resetFormCounter()" class="btn-steel py-2.5 px-2 rounded-lg font-display text-xs font-bold uppercase tracking-wider spark-trigger">
+                    <button onclick="resetFormCounter()" class="btn-steel py-3 px-2 rounded-2xl font-display text-xs font-bold uppercase tracking-wider text-gray-200 spark-trigger">
                         RESET
                     </button>
-                    <button onclick="saveFormSession()" class="btn-steel py-2.5 px-2 rounded-lg font-display text-xs font-bold uppercase tracking-wider text-ember border-ember/40 spark-trigger">
+                    <button onclick="saveFormSession()" class="btn-steel py-3 px-2 rounded-2xl font-display text-xs font-bold uppercase tracking-wider text-ember border-ember/40 spark-trigger">
                         SALVA RECORD
                     </button>
                 </div>
@@ -424,23 +404,49 @@
         <!-- ========================================================= -->
         <section id="tab-workout" class="tab-view active space-y-4">
 
-            <!-- Banner Stato Sessione (Inattiva vs Attiva) -->
-            <div id="sessionStartCard" class="steel-panel p-4">
-                <div class="corner-plate"></div>
-                <span class="rivet-tl"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+            <!-- Card Iniziale "PRONTO A FORGIARE" con Dischi Bilanciere sulla Destra -->
+            <div id="sessionStartCard" class="steel-panel p-5 overflow-hidden">
+                <!-- Illustrazione Vettoriale Bilanciere con Dischi (Come nello screenshot) -->
+                <div class="barbell-hero-art flex items-center justify-end opacity-55">
+                    <svg viewBox="0 0 220 160" class="w-48 h-36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="plateGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#3a3d45"/>
+                                <stop offset="45%" stop-color="#1b1c20"/>
+                                <stop offset="100%" stop-color="#0a0b0d"/>
+                            </linearGradient>
+                            <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#6b7280"/>
+                                <stop offset="50%" stop-color="#272930"/>
+                                <stop offset="100%" stop-color="#111215"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Barra d'acciaio -->
+                        <rect x="0" y="74" width="220" height="10" rx="2" fill="url(#barGrad)"/>
+                        <!-- Dischi Olimpionici 3D -->
+                        <ellipse cx="102" cy="79" rx="16" ry="54" fill="url(#plateGrad)" stroke="#4b5563" stroke-width="1.2"/>
+                        <ellipse cx="116" cy="79" rx="16" ry="54" fill="url(#plateGrad)" stroke="#4b5563" stroke-width="1.2"/>
+                        <ellipse cx="130" cy="79" rx="15" ry="50" fill="url(#plateGrad)" stroke="#4b5563" stroke-width="1.2"/>
+                        <ellipse cx="143" cy="79" rx="13" ry="42" fill="url(#plateGrad)" stroke="#374151" stroke-width="1"/>
+                        <!-- Collare / Mozzo Centrale -->
+                        <ellipse cx="154" cy="79" rx="9" ry="18" fill="#272930" stroke="#6b7280" stroke-width="1.2"/>
+                        <rect x="154" y="71" width="52" height="16" rx="3" fill="url(#barGrad)"/>
+                    </svg>
+                </div>
 
-                <div class="pr-4">
-                    <span class="font-tech text-xs font-bold text-ember uppercase tracking-widest">SESSIONE DI FORZA</span>
-                    <h2 class="font-display text-2xl font-extrabold uppercase text-white tracking-wide leading-tight mt-0.5">
+                <div class="relative z-10 max-w-[78%]">
+                    <span class="font-display text-xs font-bold text-ember uppercase tracking-[0.14em] block">SESSIONE DI FORZA</span>
+                    <h2 class="font-display text-[26px] font-extrabold uppercase text-white tracking-wide leading-tight mt-1">
                         PRONTO A FORGIARE
                     </h2>
-                    <p class="text-xs text-gray-400 mt-1">
+                    <p class="text-xs text-gray-300 mt-1.5 leading-relaxed">
                         Avvia la sessione, registra ogni esercizio con set, ripetizioni e kg, e ottieni gli XP bilanciati al termine.
                     </p>
                 </div>
 
-                <button onclick="startWorkoutSession()" class="btn-ember w-full mt-4 py-3.5 px-4 rounded-xl text-base flex items-center justify-center gap-2 spark-trigger">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>INIZIA ALLENAMENTO</span>
+                <button onclick="startWorkoutSession()" class="btn-ember relative z-10 w-full mt-5 py-3.5 px-4 rounded-2xl text-sm flex items-center justify-center gap-2.5 spark-trigger">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <span>INIZIA ALLENAMENTO</span>
                 </button>
             </div>
 
@@ -448,34 +454,31 @@
             <div id="activeSessionContainer" class="hidden space-y-4">
 
                 <!-- Barra Controllo Sessione Attiva -->
-                <div class="steel-panel p-3.5 flex items-center justify-between">
+                <div class="steel-panel p-4 flex items-center justify-between border-ember/50">
                     <div class="flex items-center gap-3">
                         <div class="w-2.5 h-2.5 rounded-full bg-ember animate-pulse"></div>
                         <div>
-                            <span class="font-mono text-[10px] text-gray-400 uppercase block leading-none">SESSIONE IN CORSO</span>
-                            <span id="sessionDurationDisplay" class="font-display text-xl font-extrabold text-white tracking-wider">00:00</span>
+                            <span class="font-mono text-[9px] text-ember uppercase block leading-none tracking-widest">SESSIONE IN CORSO</span>
+                            <span id="sessionDurationDisplay" class="font-mono text-xl font-bold text-white tracking-wider">00:00</span>
                         </div>
                     </div>
-                    <button onclick="finishWorkoutSessionAndCalculateXP()" class="btn-ember px-4 py-2.5 rounded-lg text-xs spark-trigger">
+                    <button onclick="finishWorkoutSessionAndCalculateXP()" class="btn-ember px-4 py-2.5 rounded-2xl text-xs spark-trigger">
                         TERMINA E CALCOLA XP
                     </button>
                 </div>
 
                 <!-- Form Aggiungi Esercizio alla Sessione -->
                 <div class="steel-panel p-4 space-y-3">
-                    <div class="corner-plate"></div>
-                    <span class="rivet-tl"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
-
-                    <div class="flex items-center justify-between pr-5">
-                        <h3 class="font-display text-base font-extrabold uppercase tracking-wide text-white">REGISTRA ESERCIZIO</h3>
-                        <span id="exerciseBenchmarkHint" class="font-mono text-[10px] text-gray-400">NUOVO ESERCIZIO</span>
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display text-sm font-extrabold uppercase tracking-wider text-white">REGISTRA ESERCIZIO</h3>
+                        <span id="exerciseBenchmarkHint" class="font-mono text-[10px] text-ember">NUOVO ESERCIZIO</span>
                     </div>
 
                     <!-- Gruppo Muscolare + Nome Esercizio -->
                     <div class="grid grid-cols-5 gap-2">
                         <div class="col-span-2">
-                            <label class="font-mono text-[9px] text-gray-400 uppercase block mb-1">MUSCOLO</label>
-                            <select id="wkMuscle" onchange="updateExerciseSuggestions()" class="w-full rounded-lg px-2.5 py-2 text-xs font-semibold">
+                            <label class="font-mono text-[9px] text-gray-400 uppercase block mb-1 tracking-wider">MUSCOLO</label>
+                            <select id="wkMuscle" onchange="updateExerciseSuggestions()" class="w-full rounded-2xl px-2.5 py-2.5 text-xs font-semibold">
                                 <option value="petto">Petto</option>
                                 <option value="schiena">Schiena</option>
                                 <option value="gambe">Gambe</option>
@@ -486,119 +489,116 @@
                             </select>
                         </div>
                         <div class="col-span-3">
-                            <label class="font-mono text-[9px] text-gray-400 uppercase block mb-1">ESERCIZIO</label>
-                            <select id="wkExerciseSelect" onchange="handleExerciseSelectChange()" class="w-full rounded-lg px-2.5 py-2 text-xs font-semibold">
+                            <label class="font-mono text-[9px] text-gray-400 uppercase block mb-1 tracking-wider">ESERCIZIO</label>
+                            <select id="wkExerciseSelect" onchange="handleExerciseSelectChange()" class="w-full rounded-2xl px-2.5 py-2.5 text-xs font-semibold">
                             </select>
-                            <input id="wkExerciseCustom" type="text" oninput="checkBenchmarkPreview()" placeholder="Scrivi nome esercizio..." class="hidden w-full mt-1.5 rounded-lg px-2.5 py-2 text-xs font-semibold">
+                            <input id="wkExerciseCustom" type="text" oninput="checkBenchmarkPreview()" placeholder="Scrivi nome esercizio..." class="hidden w-full mt-1.5 rounded-2xl px-2.5 py-2.5 text-xs font-semibold">
                         </div>
                     </div>
 
                     <!-- Set, Ripetizioni, Peso (kg) -->
                     <div class="grid grid-cols-3 gap-2.5">
-                        <div class="bg-[#0e1013] border border-[#272b35] rounded-lg p-2 text-center">
+                        <div class="bg-[#0c0d0f] border border-steelBorder rounded-2xl p-2 text-center">
                             <span class="font-mono text-[9px] text-gray-400 uppercase block">SET</span>
                             <div class="flex items-center justify-between mt-1">
-                                <button onclick="adjustInput('wkSets', -1, 1, 20)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">-</button>
-                                <input id="wkSets" type="number" value="3" min="1" max="20" oninput="checkBenchmarkPreview()" class="w-10 text-center bg-transparent border-none font-display text-lg font-extrabold text-white p-0">
-                                <button onclick="adjustInput('wkSets', 1, 1, 20)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">+</button>
+                                <button onclick="adjustInput('wkSets', -1, 1, 20)" class="btn-steel w-7 h-7 rounded-xl font-mono font-bold text-sm spark-trigger">-</button>
+                                <input id="wkSets" type="number" value="3" min="1" max="20" oninput="checkBenchmarkPreview()" class="w-10 text-center bg-transparent border-none font-mono text-base font-bold text-white p-0">
+                                <button onclick="adjustInput('wkSets', 1, 1, 20)" class="btn-steel w-7 h-7 rounded-xl font-mono font-bold text-sm spark-trigger">+</button>
                             </div>
                         </div>
 
-                        <div class="bg-[#0e1013] border border-[#272b35] rounded-lg p-2 text-center">
+                        <div class="bg-[#0c0d0f] border border-steelBorder rounded-2xl p-2 text-center">
                             <span class="font-mono text-[9px] text-gray-400 uppercase block">RIPETIZIONI</span>
                             <div class="flex items-center justify-between mt-1">
-                                <button onclick="adjustInput('wkReps', -1, 1, 100)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">-</button>
-                                <input id="wkReps" type="number" value="10" min="1" max="100" oninput="checkBenchmarkPreview()" class="w-10 text-center bg-transparent border-none font-display text-lg font-extrabold text-white p-0">
-                                <button onclick="adjustInput('wkReps', 1, 1, 100)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">+</button>
+                                <button onclick="adjustInput('wkReps', -1, 1, 100)" class="btn-steel w-7 h-7 rounded-xl font-mono font-bold text-sm spark-trigger">-</button>
+                                <input id="wkReps" type="number" value="10" min="1" max="100" oninput="checkBenchmarkPreview()" class="w-10 text-center bg-transparent border-none font-mono text-base font-bold text-white p-0">
+                                <button onclick="adjustInput('wkReps', 1, 1, 100)" class="btn-steel w-7 h-7 rounded-xl font-mono font-bold text-sm spark-trigger">+</button>
                             </div>
                         </div>
 
-                        <div class="bg-[#0e1013] border border-[#272b35] rounded-lg p-2 text-center">
+                        <div class="bg-[#0c0d0f] border border-steelBorder rounded-2xl p-2 text-center">
                             <span class="font-mono text-[9px] text-gray-400 uppercase block">PESO (KG)</span>
                             <div class="flex items-center justify-between mt-1">
-                                <button onclick="adjustInput('wkWeight', -2, 0, 500)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">-</button>
-                                <input id="wkWeight" type="number" value="40" min="0" max="500" step="0.5" oninput="checkBenchmarkPreview()" class="w-11 text-center bg-transparent border-none font-display text-lg font-extrabold text-ember p-0">
-                                <button onclick="adjustInput('wkWeight', 2, 0, 500)" class="btn-steel w-7 h-7 rounded font-mono font-bold text-sm spark-trigger">+</button>
+                                <button onclick="adjustInput('wkWeight', -2, 0, 500)" class="btn-steel w-7 h-7 rounded-xl font-mono font-bold text-sm spark-trigger">-</button>
+                                <input id="wkWeight" type="number" value="40" min="0" max="500" step="0.5" oninput="checkBenchmarkPreview()" class="w-11 text-center bg-transparent border-none font-mono text-base font-bold text-ember p-0">
+                                <button onclick="adjustInput('wkWeight', 2, 0, 500)" class="btn-steel w-7 h-7 rounded-xl font-mono font-bold text-sm spark-trigger">+</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Anteprima Progressione + Pulsante Aggiungi -->
                     <div class="flex items-center justify-between gap-2 pt-1">
-                        <div id="progressionStatusTag" class="font-mono text-[10px] px-2.5 py-1.5 rounded bg-[#0e1013] border border-[#272b35] text-gray-400 flex-1 truncate">
+                        <div id="progressionStatusTag" class="font-mono text-[10px] px-3 py-2 rounded-xl bg-[#0c0d0f] border border-steelBorder text-gray-400 flex-1 truncate">
                             PRIMA REGISTRAZIONE
                         </div>
-                        <button onclick="addExerciseToSession()" class="btn-ember px-4 py-2.5 rounded-lg text-xs shrink-0 spark-trigger">
-                            + AGGIUNGI ALLA SESSIONE
+                        <button onclick="addExerciseToSession()" class="btn-ember px-4 py-2.5 rounded-2xl text-xs shrink-0 spark-trigger">
+                            + AGGIUNGI
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Timer di Recupero Industrial (Al centro tra registrazione ed esercizi completati) -->
-            <div class="steel-panel p-4">
-                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
-
-                <div class="flex items-center justify-between mb-3">
-                    <div>
-                        <span class="font-tech text-[11px] font-bold text-gray-400 uppercase tracking-widest block">CRONOMETRO RECUPERO</span>
-                        <h3 class="font-display text-base font-extrabold uppercase text-white">TIMER TRA LE SERIE</h3>
+            <!-- Cronometro Recupero (Layout Identico allo Screenshot di Riferimento) -->
+            <div class="steel-panel p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        <h3 class="font-display text-xs font-bold uppercase text-gray-300 tracking-wider">CRONOMETRO RECUPERO</h3>
                     </div>
                     <!-- Preset Rapidi -->
-                    <div class="flex items-center gap-1">
-                        <button onclick="setRestPreset(45)" class="btn-steel px-2 py-1 rounded font-mono text-[10px] font-bold spark-trigger">0:45</button>
-                        <button onclick="setRestPreset(60)" class="btn-steel px-2 py-1 rounded font-mono text-[10px] font-bold spark-trigger">1:00</button>
-                        <button onclick="setRestPreset(90)" class="btn-steel px-2 py-1 rounded font-mono text-[10px] font-bold spark-trigger">1:30</button>
-                        <button onclick="setRestPreset(120)" class="btn-steel px-2 py-1 rounded font-mono text-[10px] font-bold spark-trigger">2:00</button>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="setRestPreset(45)" class="btn-steel px-2.5 py-1 rounded-xl font-mono text-[10px] font-bold spark-trigger">0:45</button>
+                        <button onclick="setRestPreset(60)" class="btn-steel px-2.5 py-1 rounded-xl font-mono text-[10px] font-bold spark-trigger">1:00</button>
+                        <button onclick="setRestPreset(90)" class="btn-steel px-2.5 py-1 rounded-xl font-mono text-[10px] font-bold spark-trigger">1:30</button>
+                        <button onclick="setRestPreset(120)" class="btn-steel px-2.5 py-1 rounded-xl font-mono text-[10px] font-bold spark-trigger">2:00</button>
                     </div>
                 </div>
 
                 <!-- Display Digitale + Regolazione Fine -->
-                <div class="flex items-center justify-between gap-2">
-                    <button onclick="changeRestSeconds(-15)" class="btn-steel px-3 py-3 rounded-lg font-mono text-xs font-bold spark-trigger">-15S</button>
+                <div class="flex items-center justify-between gap-2.5">
+                    <button onclick="changeRestSeconds(-15)" class="btn-steel px-3.5 py-4 rounded-2xl font-mono text-xs font-bold text-gray-300 spark-trigger">-15S</button>
 
-                    <div class="digital-readout flex-1 py-2.5 px-4 rounded-xl text-center relative overflow-hidden">
-                        <span id="restTimerDisplay" class="font-mono text-3xl font-extrabold text-white tracking-widest">01:30</span>
-                        <div class="w-full h-1 bg-[#181b22] rounded-full mt-1.5 overflow-hidden">
-                            <div id="restProgressBar" class="h-full bg-ember transition-all duration-300" style="width: 100%"></div>
+                    <div class="digital-readout flex-1 py-3.5 px-4 rounded-2xl text-center relative overflow-hidden">
+                        <span id="restTimerDisplay" class="font-mono text-4xl font-extrabold text-white tracking-wider">01:30</span>
+                        <div class="w-4/5 mx-auto h-1.5 bg-[#1b1d22] rounded-full overflow-hidden mt-2.5">
+                            <div id="restProgressBar" class="h-full bg-ember rounded-full transition-all duration-300" style="width: 100%"></div>
                         </div>
                     </div>
 
-                    <button onclick="changeRestSeconds(15)" class="btn-steel px-3 py-3 rounded-lg font-mono text-xs font-bold spark-trigger">+15S</button>
+                    <button onclick="changeRestSeconds(15)" class="btn-steel px-3.5 py-4 rounded-2xl font-mono text-xs font-bold text-gray-300 spark-trigger">+15S</button>
                 </div>
 
-                <!-- Avvia / Ferma / Reset Recupero -->
-                <div class="grid grid-cols-3 gap-2 mt-3">
-                    <button id="btnStartRest" onclick="toggleRestTimer()" class="col-span-2 btn-ember py-2.5 px-3 rounded-lg text-xs flex items-center justify-center gap-1.5 spark-trigger">
+                <!-- Pulsanti Avvia / Reset Recupero (Identici allo screenshot) -->
+                <div class="grid grid-cols-3 gap-2.5 mt-4">
+                    <button id="btnStartRest" onclick="toggleRestTimer()" class="btn-ember col-span-2 py-3.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 spark-trigger">
                         <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>AVVIA RECUPERO</span>
                     </button>
-                    <button onclick="resetRestTimer()" class="btn-steel py-2.5 px-3 rounded-lg font-display text-xs font-bold uppercase tracking-wider spark-trigger">
+                    <button onclick="resetRestTimer()" class="btn-steel col-span-1 py-3.5 px-3 rounded-2xl font-display text-xs font-bold uppercase tracking-wider text-gray-300 spark-trigger">
                         RESET
                     </button>
                 </div>
             </div>
 
-            <!-- Diario Esercizi Svolti nella Sessione Corrente (Sotto il Timer) -->
-            <div id="sessionCompletedCard" class="hidden steel-panel p-4">
-                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
-
-                <div class="flex items-center justify-between mb-2.5">
-                    <h3 class="font-display text-sm font-extrabold uppercase tracking-wider text-gray-200">
-                        ESERCIZI COMPLETATI (<span id="sessionLogCount">0</span>)
+            <!-- Lista Esercizi della Sessione Corrente -->
+            <div id="sessionCompletedCard" class="steel-panel p-4 hidden">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-display text-sm font-extrabold uppercase tracking-wider text-white">
+                        ESERCIZI REGISTRATI (<span id="sessionLogCount" class="text-ember">0</span>)
                     </h3>
-                    <span id="sessionTotalVolume" class="font-mono text-[10px] text-ember font-bold">VOL: 0 KG</span>
+                    <span id="sessionTotalVolume" class="font-mono text-[10px] text-gray-400">VOL: 0 KG</span>
                 </div>
-
-                <div id="sessionExerciseList" class="space-y-2 max-h-56 overflow-y-auto pr-1">
-                    <p class="text-xs text-gray-500 text-center py-4 font-mono">Nessun esercizio registrato. Aggiungi il primo qui sopra.</p>
+                <div id="sessionExerciseList" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                    <p class="text-xs text-gray-500 text-center py-4">Nessun esercizio registrato. Aggiungi il primo qui sopra.</p>
                 </div>
             </div>
 
-            <!-- Ultimo Riepilogo XP Guadagnati (Nascosto durante la sessione attiva) -->
-            <div id="lastSessionSummaryCard" class="hidden steel-panel p-4 border-ember/40">
+            <!-- Riepilogo Ultima Sessione Completata -->
+            <div id="lastSessionSummaryCard" class="steel-panel p-4 hidden border-ember/55">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="font-tech text-xs font-bold text-ember uppercase tracking-widest">ULTIMO REPORT SESSIONE</span>
-                    <span id="summaryTotalXpBadge" class="font-display text-base font-extrabold text-white bg-ember/20 border border-ember/50 px-2.5 py-0.5 rounded">+0 XP</span>
+                    <span class="font-display text-xs font-bold text-ember uppercase tracking-wider">ULTIMA SESSIONE COMPLETATA</span>
+                    <span id="summaryTotalXpBadge" class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-lg bg-ember text-[#0b0c0e]">+0 XP</span>
                 </div>
                 <div id="summaryBreakdownList" class="space-y-1.5 text-xs"></div>
             </div>
@@ -606,182 +606,139 @@
         </section>
 
         <!-- ========================================================= -->
-        <!-- TAB 3 (DESTRA): STATISTICHE RPG & MAPPA ANATOMICA         -->
+        <!-- TAB 3 (DESTRA): STATISTICHE RPG, CORPO UMANO & RUGGINE     -->
         <!-- ========================================================= -->
         <section id="tab-stats" class="tab-view space-y-4">
 
-            <!-- Scheda Personaggio RPG + Anello Costanza -->
-            <div class="steel-panel p-4">
-                <div class="corner-plate"></div>
-                <span class="rivet-tl"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
-
-                <div class="flex items-center justify-between gap-3 pr-4">
-                    <div class="flex items-center gap-3.5 min-w-0">
-                        <!-- Scudo Livello Generale -->
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-b from-[#262b35] to-[#111317] border-2 border-ember flex flex-col items-center justify-center shadow-[0_0_18px_rgba(255,90,0,0.28)] shrink-0">
-                            <span class="font-mono text-[9px] text-gray-400 uppercase">LVL</span>
-                            <span id="rpgOverallLevel" class="font-display text-2xl font-extrabold text-white leading-none">1</span>
-                        </div>
-                        <div class="min-w-0">
-                            <span class="font-tech text-xs font-bold text-ember uppercase tracking-widest">SCHEDA ATLETA</span>
-                            <h2 id="rpgPlayerTitle" class="font-display text-xl font-extrabold uppercase text-white tracking-wide leading-tight truncate">
-                                APPRENDISTA DEL FERRO
-                            </h2>
-                            <p id="rpgInactivityInfo" class="font-mono text-[10px] text-gray-400 mt-0.5">Ultimo allenamento: Oggi</p>
-                        </div>
-                    </div>
-
-                    <!-- Mini Anello Costanza (stile concept) -->
-                    <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
-                        <svg class="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
-                            <path class="text-[#262a34]" stroke-width="3.2" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                            <path id="consistencyRingPath" class="text-ember transition-all duration-500" stroke-dasharray="100, 100" stroke-width="3.2" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                            <span id="sessionsCountBadge" class="font-display text-xs font-extrabold text-white leading-none">0/16</span>
-                            <span class="font-mono text-[7px] text-gray-400 uppercase">MESE</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Banner Penalità Ruggine (> 10 giorni inattività) -->
-                <div id="rustWarningBanner" class="hidden mt-3 p-2.5 rounded-lg bg-amber-950/50 border border-amber-700/60 flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2">
-                        <span class="text-base">⚠️</span>
-                        <div>
-                            <p class="font-display text-xs font-bold uppercase text-amber-400 tracking-wide">STATISTICHE ARRUGGINITE</p>
-                            <p class="text-[11px] text-amber-200/80">Oltre 10 giorni di stop. Completa una sessione per lucidare i muscoli (nessun livello perso).</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Interruttore Modalità Vacanza / Infortunio -->
-                <div class="mt-3 pt-3 border-t border-[#252932] flex items-center justify-between">
+            <!-- Banner Allerta Ruggine -->
+            <div id="rustWarningBanner" class="hidden steel-panel p-3.5 border-red-500/60 bg-red-950/20">
+                <div class="flex items-start gap-2.5">
+                    <span class="text-red-400 font-mono text-sm font-bold mt-0.5">[!]</span>
                     <div>
-                        <span class="font-display text-xs font-bold uppercase tracking-wide text-gray-200 block">MODALITÀ VACANZA / INFORTUNIO</span>
-                        <span class="text-[11px] text-gray-400">Congela il timer di ruggine durante le pause programmate</span>
+                        <p class="font-display text-xs font-extrabold uppercase text-red-400 tracking-wider">CORROSIONE DA INATTIVITÀ RILEVATA</p>
+                        <p class="text-[11px] text-gray-300 mt-0.5">
+                            Non ti alleni da più di 10 giorni. Completa una sessione reale per lucidare l'acciaio!
+                        </p>
                     </div>
-                    <button id="btnVacationToggle" onclick="toggleVacationMode()" class="btn-steel px-3 py-1.5 rounded-lg font-mono text-xs font-bold spark-trigger">
+                </div>
+            </div>
+
+            <!-- Intestazione Livello Generale + Modalità Vacanza -->
+            <div class="steel-panel p-4 flex items-center justify-between gap-2">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-display text-[11px] font-bold text-ember uppercase tracking-wider">LIVELLO ATLETA</span>
+                        <span id="rpgOverallRankBadge" class="font-mono text-[9px] font-bold px-2 py-0.5 rounded-lg bg-[#0c0d0f] border border-steelBorder text-gray-300">WOOD</span>
+                    </div>
+                    <div class="flex items-baseline gap-2 mt-0.5">
+                        <span id="rpgOverallLevel" class="font-mono text-3xl font-extrabold text-white leading-none">1</span>
+                        <span id="rpgPlayerTitle" class="font-display text-xs font-bold uppercase text-gray-300 tracking-wide">APPRENDISTA DEL FERRO</span>
+                    </div>
+                    <p id="rpgInactivityInfo" class="font-mono text-[10px] text-gray-400 mt-1">Ultimo allenamento: Oggi</p>
+                </div>
+
+                <div class="text-right shrink-0">
+                    <span class="font-mono text-[9px] text-gray-400 uppercase block">MODALITÀ VACANZA</span>
+                    <button id="btnVacationToggle" onclick="toggleVacationMode()" class="btn-steel mt-1 px-3 py-1.5 rounded-xl font-mono text-[10px] font-bold uppercase tracking-wider spark-trigger">
                         OFF
                     </button>
                 </div>
             </div>
 
-            <!-- Mappa Anatomica Fronte / Retro con Colorazione Rank -->
-            <div class="steel-panel p-4 relative overflow-hidden">
-                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
-
+            <!-- Mappa Muscolare & Dettaglio -->
+            <div class="steel-panel p-4">
                 <div class="flex items-center justify-between mb-2">
-                    <div>
-                        <span class="font-tech text-[11px] font-bold text-ember uppercase tracking-widest block">RANKED PHYSIQUE</span>
-                        <h3 class="font-display text-base font-extrabold uppercase text-white">MAPPA MUSCOLARE</h3>
-                    </div>
+                    <h3 class="font-display text-sm font-extrabold uppercase tracking-wider text-white">MAPPA MUSCOLARE</h3>
                     <span class="font-mono text-[10px] text-gray-400">TOCCA UN MUSCOLO</span>
                 </div>
 
-                <!-- Container Manichino + Eventuale Patina Ruggine -->
-                <div id="anatomyWrapper" class="relative py-2 flex items-center justify-center">
-                    <div id="rustOverlayLayer" class="hidden rust-overlay absolute inset-0 rounded-xl pointer-events-none z-10"></div>
+                <!-- Contenitore Immagine Reale (corpo.png) + Zone Interattive Rank -->
+                <div id="anatomyWrapper" class="relative w-full flex flex-col items-center justify-center py-2 transition-all duration-500">
+                    <!-- Layer Overlay Ruggine -->
+                    <div id="rustOverlayLayer" class="hidden rust-overlay absolute inset-0 rounded-2xl pointer-events-none z-20"></div>
 
-                    <svg viewBox="0 0 360 275" class="w-full max-w-[340px] h-auto drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)]">
-                        <!-- Etichette Fronte / Retro -->
-                        <text x="90" y="14" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono" font-size="9" font-weight="700">FRONTE</text>
-                        <text x="270" y="14" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono" font-size="9" font-weight="700">RETRO</text>
+                    <div class="relative w-full max-w-[360px] mx-auto select-none">
+                        <!-- Tua Foto Anatomica Fronte + Retro (carica corpo.png su GitHub accanto a index.html) -->
+                        <img id="anatomicalBodyImg" src="corpo.png" alt="Mappa Muscolare Fronte e Retro"
+                             onload="removeLightBackgroundFromBodyImg(this)"
+                             onerror="this.style.display='none'; document.getElementById('missingBodyImgHint').classList.remove('hidden');"
+                             class="w-full h-auto block rounded-2xl mx-auto drop-shadow-[0_14px_28px_rgba(0,0,0,0.9)]">
 
-                        <!-- ==================== CORPO FRONTE (X centro = 90) ==================== -->
-                        <!-- Testa & Collo -->
-                        <circle cx="90" cy="34" r="13" fill="#2a2f3a" stroke="#111317" stroke-width="1.5"/>
-                        <rect x="84" y="46" width="12" height="9" rx="3" fill="#2a2f3a"/>
+                        <!-- Avviso discreto se corpo.png non è ancora stato caricato nella cartella -->
+                        <div id="missingBodyImgHint" class="hidden bg-[#0c0d0f] border border-dashed border-ember/50 rounded-2xl p-5 text-center my-2">
+                            <p class="font-display text-sm font-extrabold uppercase text-ember tracking-wider">CARICA LA FOTO COME "corpo.png"</p>
+                            <p class="text-[11px] text-gray-300 mt-1.5 leading-relaxed">
+                                Salva questa immagine Fronte + Retro con nome <span class="font-mono text-white font-bold">corpo.png</span> nella stessa cartella di <span class="font-mono text-white">index.html</span> su GitHub!
+                            </p>
+                        </div>
 
-                        <!-- SPALLE (Fronte) -->
-                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('spalle')">
-                            <path data-muscle="spalle" d="M62,56 Q52,60 51,74 L63,76 L67,58 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="spalle" d="M118,56 Q128,60 129,74 L117,76 L113,58 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                        </g>
+                        <!-- Mappa SVG Interattiva Calibrata su Fronte (Sinistra) e Retro (Destra) -->
+                        <svg viewBox="0 0 1000 562" class="absolute inset-0 w-full h-full z-10" style="mix-blend-mode: color;">
+                            <!-- SPALLE (Deltoidi Fronte Sx/Dx + Deltoidi Retro Sx/Dx) -->
+                            <g class="cursor-pointer" onclick="selectMuscleDetail('spalle')">
+                                <!-- Fronte -->
+                                <ellipse data-muscle="spalle" cx="323" cy="144" rx="18" ry="26" transform="rotate(15 323 144)" fill="#8B5A2B" fill-opacity="0.78"/>
+                                <ellipse data-muscle="spalle" cx="441" cy="144" rx="18" ry="26" transform="rotate(-15 441 144)" fill="#8B5A2B" fill-opacity="0.78"/>
+                                <!-- Retro -->
+                                <ellipse data-muscle="spalle" cx="559" cy="144" rx="18" ry="26" transform="rotate(15 559 144)" fill="#8B5A2B" fill-opacity="0.78"/>
+                                <ellipse data-muscle="spalle" cx="677" cy="144" rx="18" ry="26" transform="rotate(-15 677 144)" fill="#8B5A2B" fill-opacity="0.78"/>
+                            </g>
 
-                        <!-- PETTO -->
-                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('petto')">
-                            <path data-muscle="petto" d="M67,57 L89,57 L89,84 L66,81 Q64,69 67,57 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="petto" d="M113,57 L91,57 L91,84 L114,81 Q116,69 113,57 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                        </g>
+                            <!-- PETTO (Pettorali Fronte Sx/Dx) -->
+                            <g class="cursor-pointer" onclick="selectMuscleDetail('petto')">
+                                <path data-muscle="petto" d="M338,132 L380,136 L380,175 C362,180 342,174 336,160 Z" fill="#8B5A2B" fill-opacity="0.80"/>
+                                <path data-muscle="petto" d="M426,132 L384,136 L384,175 C402,180 422,174 428,160 Z" fill="#8B5A2B" fill-opacity="0.80"/>
+                            </g>
 
-                        <!-- BRACCIA (Fronte: Bicipiti/Avambracci) -->
-                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('braccia')">
-                            <rect data-muscle="braccia" x="49" y="75" width="12" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <rect data-muscle="braccia" x="47" y="103" width="11" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <rect data-muscle="braccia" x="119" y="75" width="12" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <rect data-muscle="braccia" x="122" y="103" width="11" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                        </g>
+                            <!-- SCHIENA (Trapezi, Dorsali e Lombari sul Retro) -->
+                            <g class="cursor-pointer" onclick="selectMuscleDetail('schiena')">
+                                <path data-muscle="schiena" d="M594,108 L642,108 L664,138 L654,238 L618,262 L582,238 L572,138 Z" fill="#8B5A2B" fill-opacity="0.78"/>
+                            </g>
 
-                        <!-- CORE (Addome & Obliqui) -->
-                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('core')">
-                            <rect data-muscle="core" x="74" y="85" width="32" height="44" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <line x1="90" y1="86" x2="90" y2="128" stroke="#0d0e11" stroke-width="1.2"/>
-                            <line x1="75" y1="99" x2="105" y2="99" stroke="#0d0e11" stroke-width="1.2"/>
-                            <line x1="75" y1="113" x2="105" y2="113" stroke="#0d0e11" stroke-width="1.2"/>
-                        </g>
+                            <!-- BRACCIA (Bicipiti/Avambracci Fronte + Tricipiti/Avambracci Retro) -->
+                            <g class="cursor-pointer" onclick="selectMuscleDetail('braccia')">
+                                <!-- Fronte -->
+                                <path data-muscle="braccia" d="M306,166 L328,170 L308,284 L286,280 Z" fill="#8B5A2B" fill-opacity="0.78"/>
+                                <path data-muscle="braccia" d="M458,166 L436,170 L456,284 L478,280 Z" fill="#8B5A2B" fill-opacity="0.78"/>
+                                <!-- Retro -->
+                                <path data-muscle="braccia" d="M542,166 L564,170 L544,284 L522,280 Z" fill="#8B5A2B" fill-opacity="0.78"/>
+                                <path data-muscle="braccia" d="M694,166 L672,170 L692,284 L714,280 Z" fill="#8B5A2B" fill-opacity="0.78"/>
+                            </g>
 
-                        <!-- GAMBE (Fronte: Quadricipiti & Polpacci) -->
-                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('gambe')">
-                            <path data-muscle="gambe" d="M71,131 L88,131 L86,188 L72,188 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="gambe" d="M92,131 L109,131 L108,188 L94,188 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="gambe" d="M73,191 L85,191 L83,246 L74,246 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="gambe" d="M95,191 L107,191 L106,246 L97,246 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                        </g>
+                            <!-- CORE (Addominali & Obliqui sul Fronte) -->
+                            <g class="cursor-pointer" onclick="selectMuscleDetail('core')">
+                                <path data-muscle="core" d="M346,178 L418,178 L414,274 L382,296 L350,274 Z" fill="#8B5A2B" fill-opacity="0.80"/>
+                            </g>
 
-                        <!-- ==================== CORPO RETRO (X centro = 270) ==================== -->
-                        <!-- Testa & Collo -->
-                        <circle cx="270" cy="34" r="13" fill="#2a2f3a" stroke="#111317" stroke-width="1.5"/>
-                        <rect x="264" y="46" width="12" height="9" rx="3" fill="#2a2f3a"/>
-
-                        <!-- SPALLE (Retro) -->
-                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('spalle')">
-                            <path data-muscle="spalle" d="M242,56 Q232,60 231,74 L243,76 L247,58 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="spalle" d="M298,56 Q308,60 309,74 L297,76 L293,58 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                        </g>
-
-                        <!-- SCHIENA (Trapezio, Dorsali, Lombari) -->
-                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('schiena')">
-                            <path data-muscle="schiena" d="M248,57 L292,57 L287,102 L270,126 L253,102 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <line x1="270" y1="58" x2="270" y2="124" stroke="#0d0e11" stroke-width="1.3"/>
-                        </g>
-
-                        <!-- BRACCIA (Retro: Tricipiti) -->
-                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('braccia')">
-                            <rect data-muscle="braccia" x="229" y="75" width="12" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <rect data-muscle="braccia" x="227" y="103" width="11" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <rect data-muscle="braccia" x="299" y="75" width="12" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <rect data-muscle="braccia" x="302" y="103" width="11" height="27" rx="5" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                        </g>
-
-                        <!-- GAMBE (Retro: Glutei, Femorali, Polpacci) -->
-                        <g class="cursor-pointer transition-opacity hover:opacity-85" onclick="selectMuscleDetail('gambe')">
-                            <path data-muscle="gambe" d="M252,126 L269,126 L269,150 L251,148 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="gambe" d="M271,126 L288,126 L289,148 L271,150 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="gambe" d="M251,151 L268,151 L266,188 L252,188 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="gambe" d="M272,151 L289,151 L288,188 L274,188 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="gambe" d="M253,191 L265,191 L263,246 L254,246 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                            <path data-muscle="gambe" d="M275,191 L287,191 L286,246 L277,246 Z" fill="#8B5A2B" stroke="#0d0e11" stroke-width="1.5"/>
-                        </g>
-                    </svg>
+                            <!-- GAMBE (Quadricipiti/Polpacci Fronte + Glutei/Femorali/Polpacci Retro) -->
+                            <g class="cursor-pointer" onclick="selectMuscleDetail('gambe')">
+                                <!-- Fronte -->
+                                <path data-muscle="gambe" d="M342,276 L379,298 L374,504 L344,504 L336,368 Z" fill="#8B5A2B" fill-opacity="0.78"/>
+                                <path data-muscle="gambe" d="M422,276 L385,298 L390,504 L420,504 L428,368 Z" fill="#8B5A2B" fill-opacity="0.78"/>
+                                <!-- Retro -->
+                                <path data-muscle="gambe" d="M578,255 L616,265 L612,504 L580,504 L572,368 Z" fill="#8B5A2B" fill-opacity="0.78"/>
+                                <path data-muscle="gambe" d="M658,255 L620,265 L624,504 L656,504 L664,368 Z" fill="#8B5A2B" fill-opacity="0.78"/>
+                            </g>
+                        </svg>
+                    </div>
                 </div>
 
                 <!-- Box Dettaglio Muscolo Selezionato -->
-                <div id="selectedMuscleCard" class="mt-2 bg-[#0e1013] border border-[#2a2e36] rounded-xl p-3 flex items-center justify-between gap-3">
+                <div id="selectedMuscleCard" class="mt-2 bg-[#0c0d0f] border border-steelBorder rounded-2xl p-3 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3 min-w-0">
-                        <div id="detailMuscleMedal" class="w-11 h-11 rounded-xl bg-[#161920] border border-[#2c313d] flex items-center justify-center shrink-0"></div>
+                        <div id="detailMuscleMedal" class="w-11 h-11 rounded-2xl bg-[#15171c] border border-steelBorder flex items-center justify-center shrink-0"></div>
                         <div class="min-w-0">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <span id="detailMuscleName" class="font-display text-base font-extrabold uppercase text-white">PETTO</span>
-                                <span id="detailMuscleRankBadge" class="font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase bg-amber-900/40 text-amber-500 border border-amber-700/50">
+                                <span id="detailMuscleName" class="font-display text-base font-extrabold uppercase text-white tracking-wide">PETTO</span>
+                                <span id="detailMuscleRankBadge" class="font-mono text-[10px] font-bold px-2 py-0.5 rounded-lg uppercase bg-amber-900/30 text-amber-500 border border-amber-700/40">
                                     WOOD · LVL 1
                                 </span>
                             </div>
-                            <p id="detailMuscleXpText" class="font-mono text-[11px] text-gray-400 mt-1">0 / 100 XP al prossimo livello</p>
+                            <p id="detailMuscleXpText" class="font-mono text-[11px] text-gray-400 mt-0.5">0 / 100 XP al prossimo livello</p>
                         </div>
                     </div>
                     <div class="w-20 shrink-0">
-                        <div class="w-full h-2 bg-[#1a1d24] rounded-full overflow-hidden border border-[#2c313d]">
+                        <div class="w-full h-1.5 bg-[#1b1d22] rounded-full overflow-hidden">
                             <div id="detailMuscleProgressBar" class="h-full bg-ember transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
@@ -790,18 +747,16 @@
 
             <!-- Elenco Completo delle 7 Statistiche Base -->
             <div class="steel-panel p-4 space-y-2.5">
-                <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
-
                 <div class="flex items-center justify-between mb-1">
-                    <h3 class="font-display text-base font-extrabold uppercase tracking-wide text-white">STATISTICHE & RANK</h3>
-                    <span class="font-mono text-[10px] text-gray-400">6 GRUPPI + CARDIO</span>
+                    <h3 class="font-display text-sm font-extrabold uppercase tracking-wider text-white">STATISTICHE & RANK</h3>
+                    <span class="font-mono text-[10px] text-ember">6 GRUPPI + CARDIO</span>
                 </div>
 
                 <div id="statsBarsContainer" class="space-y-2"></div>
 
                 <!-- Legenda 9 Rank con Medaglie -->
-                <div class="pt-3 mt-2 border-t border-[#252932]">
-                    <span class="font-mono text-[9px] text-gray-400 uppercase tracking-wider block mb-2">MEDAGLIERE GERARCHIA RANK</span>
+                <div class="pt-3 mt-2 border-t border-steelBorder">
+                    <span class="font-display text-xs font-bold text-ember uppercase tracking-wider block mb-2">MEDAGLIERE GERARCHIA RANK</span>
                     <div id="rankLegendRow" class="grid grid-cols-3 gap-2"></div>
                 </div>
             </div>
@@ -809,14 +764,14 @@
             <!-- Controllo Test Ruggine / Inattività -->
             <div class="steel-panel p-3.5 flex items-center justify-between">
                 <div>
-                    <span class="font-mono text-[10px] text-gray-400 uppercase block">SIMULATORE TEST RUGGINE</span>
-                    <span id="simDaysLabel" class="font-display text-sm font-bold text-white">0 GG STOP</span>
+                    <span class="font-mono text-[10px] text-gray-400 uppercase block">TEST RUGGINE (10GG+)</span>
+                    <span id="simDaysLabel" class="font-mono text-xs font-bold text-white">0 GG STOP</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button onclick="simulateInactivityDays(12)" class="btn-steel px-2.5 py-1.5 rounded font-mono text-[10px] font-bold text-amber-400 spark-trigger">
+                    <button onclick="simulateInactivityDays(12)" class="btn-steel px-2.5 py-1.5 rounded-xl font-mono text-[10px] font-bold text-red-400 border-red-500/35 spark-trigger">
                         SIMULA 12GG STOP
                     </button>
-                    <button onclick="simulateInactivityDays(0)" class="btn-steel px-2.5 py-1.5 rounded font-mono text-[10px] font-bold text-emerald-400 spark-trigger">
+                    <button onclick="simulateInactivityDays(0)" class="btn-steel px-2.5 py-1.5 rounded-xl font-mono text-[10px] font-bold text-ember border-ember/35 spark-trigger">
                         LUCIDA OGGI
                     </button>
                 </div>
@@ -827,43 +782,43 @@
     </main>
 
     <!-- ========================================================= -->
-    <!-- BOTTOM NAVIGATION BAR (3 SEZIONI: FORM | ALLENAMENTO | STATS)-->
+    <!-- BOTTOM NAVIGATION BAR (IDENTICA ALLO SCREENSHOT)          -->
     <!-- ========================================================= -->
-    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#121418]/95 backdrop-blur-md border-t border-[#282c36] px-3 py-2">
-        <div class="max-w-lg mx-auto grid grid-cols-3 gap-2">
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#0d0e11]/92 backdrop-blur-md border-t border-white/[0.06] px-4 pt-2 pb-4 shadow-[0_-10px_28px_rgba(0,0,0,0.75)]">
+        <div class="max-w-lg mx-auto grid grid-cols-3 gap-2 items-center">
 
             <!-- Sinistra: FORM -->
-            <button id="nav-form" onclick="switchTab('form')" class="nav-btn py-2 px-2 rounded-xl flex flex-col items-center justify-center gap-1 text-gray-400 transition-all spark-trigger">
+            <button id="nav-form" onclick="switchTab('form')" class="nav-btn py-2.5 px-2 rounded-2xl flex flex-col items-center justify-center gap-1 text-gray-400 transition-all spark-trigger">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                 </svg>
-                <span class="font-display text-xs font-extrabold uppercase tracking-wider">FORM</span>
+                <span class="font-display text-[11px] font-bold uppercase tracking-wider">FORM</span>
             </button>
 
-            <!-- Centro: ALLENAMENTO -->
-            <button id="nav-workout" onclick="switchTab('workout')" class="nav-btn active-nav py-2 px-2 rounded-xl flex flex-col items-center justify-center gap-1 bg-ember/15 border border-ember/40 text-ember transition-all spark-trigger">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <!-- Centro: ALLENAMENTO (Pillola attiva con bagliore arancione dal basso) -->
+            <button id="nav-workout" onclick="switchTab('workout')" class="nav-btn active-nav py-2.5 px-2 rounded-2xl flex flex-col items-center justify-center gap-1 border border-ember/55 text-ember bg-gradient-to-t from-ember/25 via-[#18191d] to-[#18191d] shadow-[0_0_20px_rgba(242,92,25,0.2)] transition-all spark-trigger">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h2m14 0h2M5 7v6m14-6v6M7 10h10M9 6v8m6-8v8"/>
                 </svg>
-                <span class="font-display text-xs font-extrabold uppercase tracking-wider">ALLENAMENTO</span>
+                <span class="font-display text-[11px] font-bold uppercase tracking-wider">ALLENAMENTO</span>
             </button>
 
             <!-- Destra: STATISTICHE -->
-            <button id="nav-stats" onclick="switchTab('stats')" class="nav-btn py-2 px-2 rounded-xl flex flex-col items-center justify-center gap-1 text-gray-400 transition-all spark-trigger">
+            <button id="nav-stats" onclick="switchTab('stats')" class="nav-btn py-2.5 px-2 rounded-2xl flex flex-col items-center justify-center gap-1 text-gray-400 transition-all spark-trigger">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>
-                <span class="font-display text-xs font-extrabold uppercase tracking-wider">STATISTICHE</span>
+                <span class="font-display text-[11px] font-bold uppercase tracking-wider">STATISTICHE</span>
             </button>
 
         </div>
     </nav>
 
-    <!-- Toast Notification Custom (Mai alert) -->
+    <!-- Toast Notification Custom -->
     <div id="forgeToast" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-200">
-        <div class="bg-[#161920] border border-ember/80 px-4 py-2.5 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.9)] flex items-center gap-2.5">
+        <div class="bg-[#16181c] border border-ember px-4 py-2.5 rounded-2xl shadow-[0_10px_28px_rgba(0,0,0,0.85)] flex items-center gap-2.5">
             <span class="w-2 h-2 rounded-full bg-ember"></span>
-            <span id="forgeToastText" class="font-display text-sm font-bold uppercase tracking-wide text-white">NOTIFICA</span>
+            <span id="forgeToastText" class="font-display text-xs font-bold uppercase tracking-wider text-white">NOTIFICA</span>
         </div>
     </div>
 
@@ -872,7 +827,7 @@
     <!-- ========================================================= -->
     <script>
         // =========================================================
-        // 1. FEEDBACK MECCANICO, SCINTILLE & SUONO SINTETICO
+        // 1. FEEDBACK TATTILE, SCINTILLE & SUONO
         // =========================================================
         let audioCtx = null;
         function playMetallicClick() {
@@ -882,14 +837,14 @@
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(190, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(55, audioCtx.currentTime + 0.045);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.045);
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(260, audioCtx.currentTime + 0.032);
+                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.035);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
+                osc.stop(audioCtx.currentTime + 0.04);
             } catch (e) {}
         }
 
@@ -897,17 +852,17 @@
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 if (audioCtx.state === 'suspended') audioCtx.resume();
-                [520, 660, 880].forEach((freq, idx) => {
+                [740, 980, 1320].forEach((freq, idx) => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.12);
-                    gain.gain.setValueAtTime(0.09, audioCtx.currentTime + idx * 0.12);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.12 + 0.18);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.14);
+                    gain.gain.setValueAtTime(0.09, audioCtx.currentTime + idx * 0.14);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.14 + 0.24);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
-                    osc.start(audioCtx.currentTime + idx * 0.12);
-                    osc.stop(audioCtx.currentTime + idx * 0.12 + 0.2);
+                    osc.start(audioCtx.currentTime + idx * 0.14);
+                    osc.stop(audioCtx.currentTime + idx * 0.14 + 0.25);
                 });
             } catch (e) {}
         }
@@ -936,13 +891,13 @@
             setTimeout(() => ripple.remove(), 480);
 
             const isPrimary = btn.classList.contains('btn-ember');
-            const sparkCount = isPrimary ? 7 : 4;
+            const sparkCount = isPrimary ? 7 : 3;
             const fragment = document.createDocumentFragment();
             for (let i = 0; i < sparkCount; i++) {
                 const spark = document.createElement('span');
                 spark.className = 'spark-particle';
                 const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() * 0.4);
-                const dist = 18 + Math.random() * 24;
+                const dist = 16 + Math.random() * 20;
                 spark.style.setProperty('--sx', `${x}px`);
                 spark.style.setProperty('--sy', `${y}px`);
                 spark.style.setProperty('--ex', `${x + Math.cos(angle) * dist}px`);
@@ -975,11 +930,11 @@
             { name: 'Wood', minLvl: 1, color: '#8B5A2B' },
             { name: 'Bronze', minLvl: 3, color: '#CD7F32' },
             { name: 'Silver', minLvl: 6, color: '#9CA3AF' },
-            { name: 'Gold', minLvl: 10, color: '#EAB308' },
-            { name: 'Platinum', minLvl: 15, color: '#14B8A6' },
+            { name: 'Gold', minLvl: 10, color: '#F59E0B' },
+            { name: 'Platinum', minLvl: 15, color: '#2DD4BF' },
             { name: 'Diamond', minLvl: 21, color: '#38BDF8' },
-            { name: 'Champion', minLvl: 28, color: '#C084FC' },
-            { name: 'Titan', minLvl: 36, color: '#EF4444' },
+            { name: 'Champion', minLvl: 28, color: '#A855F7' },
+            { name: 'Titan', minLvl: 36, color: '#F25C19' },
             { name: 'Olympian', minLvl: 45, color: '#FDE047' }
         ];
 
@@ -1063,22 +1018,23 @@
             return Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
         }
 
+        /* Medaglie Rank per Statistiche */
         function getRankMedalSVG(rankName, color, size = 26) {
             const tierIndex = RANKS.findIndex(r => r.name === rankName);
             const hasWings = tierIndex >= 5;
             const hasCrown = tierIndex >= 7;
-            const innerShape = tierIndex <= 1
-                ? `<polygon points="16,9 22,16 16,23 10,16" fill="${color}" fill-opacity="0.35" stroke="${color}" stroke-width="1.5"/>`
+            const innerGlyph = tierIndex <= 1
+                ? `<circle cx="16" cy="16" r="4.5" fill="${color}" fill-opacity="0.3" stroke="${color}" stroke-width="1.4"/>`
                 : tierIndex <= 4
-                ? `<polygon points="16,7 23,12 21,22 11,22 9,12" fill="${color}" fill-opacity="0.35" stroke="${color}" stroke-width="1.6"/>`
-                : `<polygon points="16,6 24,11 24,20 16,26 8,20 8,11" fill="${color}" fill-opacity="0.4" stroke="${color}" stroke-width="1.8"/><circle cx="16" cy="16" r="3" fill="#ffffff"/>`;
+                ? `<polygon points="16,9 22,16 16,23 10,16" fill="${color}" fill-opacity="0.35" stroke="${color}" stroke-width="1.4"/>`
+                : `<polygon points="16,8 23,13 21,22 11,22 9,13" fill="${color}" fill-opacity="0.45" stroke="${color}" stroke-width="1.5"/><circle cx="16" cy="16" r="2.2" fill="#ffffff"/>`;
 
             return `
-                <svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 6px ${color}66);">
-                    ${hasWings ? `<path d="M4 13L9 15L6 20L3 17Z M28 13L23 15L26 20L29 17Z" fill="${color}" fill-opacity="0.85"/>` : ''}
-                    ${hasCrown ? `<path d="M11 6L13.5 3L16 5.5L18.5 3L21 6Z" fill="${color}"/>` : ''}
-                    <path d="M16 3L26 8V18C26 23.5 21.5 27.5 16 29C10.5 27.5 6 23.5 6 18V8L16 3Z" fill="#12141a" stroke="${color}" stroke-width="2"/>
-                    ${innerShape}
+                <svg width="${size}" height="${size}" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 3px 6px rgba(0,0,0,0.85));">
+                    ${hasWings ? `<path d="M5 12L2 15L5 18L3 20L7 22 M27 12L30 15L27 18L29 20L25 22" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+                    ${hasCrown ? `<path d="M11 6L13 3L16 5.5L19 3L21 6Z" fill="${color}"/>` : ''}
+                    <path d="M16 4L25 8.5V16.5C25 22.5 21 26.8 16 29C11 26.8 7 22.5 7 16.5V8.5L16 4Z" fill="#101114" stroke="${color}" stroke-width="1.8"/>
+                    ${innerGlyph}
                 </svg>
             `;
         }
@@ -1086,20 +1042,22 @@
         // =========================================================
         // 3. NAVIGAZIONE & OROLOGIO LIVE
         // =========================================================
+        const ACTIVE_NAV_CLASSES = ['border', 'border-ember/55', 'text-ember', 'bg-gradient-to-t', 'from-ember/25', 'via-[#18191d]', 'to-[#18191d]', 'shadow-[0_0_20px_rgba(242,92,25,0.2)]'];
+
         function switchTab(tabName) {
             document.querySelectorAll('.tab-view').forEach(sec => sec.classList.remove('active'));
             const targetSec = document.getElementById(`tab-${tabName}`);
             if (targetSec) targetSec.classList.add('active');
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-ember/15', 'border', 'border-ember/40', 'text-ember');
+                btn.classList.remove(...ACTIVE_NAV_CLASSES);
                 btn.classList.add('text-gray-400');
             });
 
             const activeBtn = document.getElementById(`nav-${tabName}`);
             if (activeBtn) {
                 activeBtn.classList.remove('text-gray-400');
-                activeBtn.classList.add('bg-ember/15', 'border', 'border-ember/40', 'text-ember');
+                activeBtn.classList.add(...ACTIVE_NAV_CLASSES);
             }
 
             if (tabName === 'stats') {
@@ -1201,7 +1159,7 @@
 
             if (!prev) {
                 hintEl.textContent = 'PRIMA VOLTA';
-                tagEl.className = 'font-mono text-[10px] px-2.5 py-1.5 rounded bg-[#0e1013] border border-[#272b35] text-gray-300 flex-1 truncate';
+                tagEl.className = 'font-mono text-[10px] px-3 py-2 rounded-xl bg-[#0c0d0f] border border-steelBorder text-gray-300 flex-1 truncate';
                 tagEl.textContent = 'NUOVO BENCHMARK (+XP BASE)';
                 return;
             }
@@ -1210,13 +1168,13 @@
             const currentMetric = computeExerciseScoreMetric(sets, reps, weight);
 
             if (currentMetric > prev.metric) {
-                tagEl.className = 'font-mono text-[10px] px-2.5 py-1.5 rounded bg-ember/15 border border-ember/50 text-ember font-bold flex-1 truncate';
-                tagEl.textContent = '★ PROGRESSIONE (+30% BONUS XP)';
+                tagEl.className = 'font-mono text-[10px] px-3 py-2 rounded-xl bg-ember/15 border border-ember text-ember font-bold flex-1 truncate';
+                tagEl.textContent = 'PROGRESSIONE (+30% BONUS XP)';
             } else if (currentMetric === prev.metric) {
-                tagEl.className = 'font-mono text-[10px] px-2.5 py-1.5 rounded bg-emerald-950/50 border border-emerald-700/50 text-emerald-400 flex-1 truncate';
-                tagEl.textContent = '✓ STANDARD MANTENUTO (+10% XP)';
+                tagEl.className = 'font-mono text-[10px] px-3 py-2 rounded-xl bg-green-500/15 border border-green-500/45 text-green-400 flex-1 truncate';
+                tagEl.textContent = 'STANDARD MANTENUTO (+10% XP)';
             } else {
-                tagEl.className = 'font-mono text-[10px] px-2.5 py-1.5 rounded bg-[#0e1013] border border-[#272b35] text-gray-400 flex-1 truncate';
+                tagEl.className = 'font-mono text-[10px] px-3 py-2 rounded-xl bg-[#0c0d0f] border border-steelBorder text-gray-400 flex-1 truncate';
                 tagEl.textContent = 'VOLUME INFERIORE (SOLO XP BASE)';
             }
         }
@@ -1288,24 +1246,24 @@
             volEl.textContent = `VOL: ${Math.round(totalVol)} KG`;
 
             if (activeSession.exercises.length === 0) {
-                listEl.innerHTML = `<p class="text-xs text-gray-500 text-center py-4 font-mono">Nessun esercizio registrato. Aggiungi il primo qui sopra.</p>`;
+                listEl.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">Nessun esercizio registrato. Aggiungi il primo qui sopra.</p>`;
                 return;
             }
 
             listEl.innerHTML = activeSession.exercises.map(ex => {
                 const mLabel = MUSCLE_INFO[ex.muscle]?.label || ex.muscle;
                 return `
-                    <div class="bg-[#0e1013] border border-[#272b35] rounded-lg px-3 py-2 flex items-center justify-between gap-2">
+                    <div class="bg-[#0c0d0f] border border-steelBorder rounded-2xl px-3 py-2 flex items-center justify-between gap-2">
                         <div class="min-w-0">
                             <div class="flex items-center gap-2">
-                                <span class="font-mono text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-ember/15 text-ember border border-ember/30">${mLabel}</span>
+                                <span class="font-mono text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-lg bg-ember/15 text-ember border border-ember/40">${mLabel}</span>
                                 <span class="font-display text-sm font-bold uppercase text-white truncate">${ex.name}</span>
                             </div>
                             <p class="font-mono text-[11px] text-gray-400 mt-0.5">
-                                ${ex.sets} SET × ${ex.reps} REP ${ex.weight > 0 ? `• <span class="text-gray-200 font-bold">${ex.weight} KG</span>` : '• CORPO LIBERO'}
+                                ${ex.sets} SET × ${ex.reps} REP ${ex.weight > 0 ? `• <span class="text-ember font-bold">${ex.weight} KG</span>` : '• CORPO LIBERO'}
                             </p>
                         </div>
-                        <button onclick="removeExerciseFromSession(${ex.id})" class="btn-steel w-7 h-7 rounded flex items-center justify-center text-gray-400 hover:text-red-400 font-mono text-xs shrink-0 spark-trigger">
+                        <button onclick="removeExerciseFromSession(${ex.id})" class="btn-steel w-7 h-7 rounded-xl flex items-center justify-center text-gray-400 hover:text-red-400 font-mono text-xs shrink-0 spark-trigger">
                             ✕
                         </button>
                     </div>
@@ -1456,14 +1414,14 @@
 
             const list = document.getElementById('summaryBreakdownList');
             list.innerHTML = summary.details.map(d => `
-                <div class="flex items-center justify-between bg-[#0e1013] border border-[#252932] px-2.5 py-1.5 rounded-lg">
+                <div class="flex items-center justify-between bg-[#0c0d0f] border border-steelBorder px-3 py-2 rounded-xl">
                     <div class="truncate pr-2">
-                        <span class="font-display font-bold uppercase text-white">${d.name}</span>
+                        <span class="font-display text-sm font-bold uppercase text-white">${d.name}</span>
                         <span class="font-mono text-[10px] text-gray-400 ml-1">(${d.muscleLabel})</span>
                     </div>
                     <div class="flex items-center gap-2 shrink-0">
                         <span class="font-mono text-[9px] ${d.status.includes('★') ? 'text-ember font-bold' : 'text-gray-400'}">${d.status}</span>
-                        <span class="font-mono text-xs font-bold text-white">+${d.xp} XP</span>
+                        <span class="font-mono text-xs font-bold text-ember">+${d.xp} XP</span>
                     </div>
                 </div>
             `).join('');
@@ -1547,13 +1505,54 @@
         // =========================================================
         // 6. STATISTICHE RPG, MAPPA ANATOMICA & SISTEMA RUGGINE
         // =========================================================
+        function removeLightBackgroundFromBodyImg(imgEl) {
+            if (!imgEl || imgEl.dataset.transparentProcessed === 'true') return;
+            try {
+                const offCanvas = document.createElement('canvas');
+                const w = imgEl.naturalWidth;
+                const h = imgEl.naturalHeight;
+                if (!w || !h) return;
+                offCanvas.width = w;
+                offCanvas.height = h;
+                const offCtx = offCanvas.getContext('2d');
+                offCtx.drawImage(imgEl, 0, 0);
+
+                const imgData = offCtx.getImageData(0, 0, w, h);
+                const data = imgData.data;
+
+                // Rileva automaticamente il colore di sfondo dall'angolo in alto a sinistra
+                const bgR = data[0], bgG = data[1], bgB = data[2];
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i], g = data[i + 1], b = data[i + 2];
+                    const dist = Math.hypot(r - bgR, g - bgG, b - bgB);
+                    if (dist < 38) {
+                        data[i + 3] = 0; // Rende trasparente lo sfondo chiaro
+                    } else if (dist < 62) {
+                        // Sfuma morbidamente i bordi per evitare scalettature
+                        data[i + 3] = Math.round(((dist - 38) / 24) * 255);
+                    }
+                }
+
+                offCtx.putImageData(imgData, 0, 0);
+                imgEl.dataset.transparentProcessed = 'true';
+                imgEl.src = offCanvas.toDataURL('image/png');
+            } catch (e) {}
+        }
+
         function renderStatsScreen() {
             const muscleKeys = Object.keys(appState.stats);
             let totalLevels = 0;
             muscleKeys.forEach(k => totalLevels += appState.stats[k].level);
             const overallLvl = Math.max(1, Math.floor(totalLevels / muscleKeys.length));
+            const overallRank = getRankForLevel(overallLvl);
 
             document.getElementById('rpgOverallLevel').textContent = overallLvl;
+            const rankBadgeEl = document.getElementById('rpgOverallRankBadge');
+            if (rankBadgeEl) {
+                rankBadgeEl.textContent = overallRank.name.toUpperCase();
+                rankBadgeEl.style.color = overallRank.color;
+            }
 
             const titles = [
                 { min: 1, title: 'APPRENDISTA DEL FERRO' },
@@ -1577,19 +1576,15 @@
                 : `Inattività: ${inactiveDays} giorn${inactiveDays === 1 ? 'o' : 'i'}`;
             document.getElementById('simDaysLabel').textContent = `${inactiveDays} GG STOP`;
 
-            // Anello costanza mensile
-            const sessions = appState.sessionsCompleted || 0;
-            const ringPct = Math.min(100, Math.round((sessions / 16) * 100));
-            document.getElementById('sessionsCountBadge').textContent = `${sessions}/16`;
-            document.getElementById('consistencyRingPath').setAttribute('stroke-dasharray', `${ringPct}, 100`);
-
             const vacBtn = document.getElementById('btnVacationToggle');
-            if (appState.vacationMode) {
-                vacBtn.textContent = 'ATTIVA';
-                vacBtn.classList.add('border-ember', 'text-ember');
-            } else {
-                vacBtn.textContent = 'OFF';
-                vacBtn.classList.remove('border-ember', 'text-ember');
+            if (vacBtn) {
+                if (appState.vacationMode) {
+                    vacBtn.textContent = 'ATTIVA';
+                    vacBtn.classList.add('border-ember', 'text-ember');
+                } else {
+                    vacBtn.textContent = 'OFF';
+                    vacBtn.classList.remove('border-ember', 'text-ember');
+                }
             }
 
             const rustBanner = document.getElementById('rustWarningBanner');
@@ -1626,19 +1621,19 @@
                 const medalSvg = getRankMedalSVG(rank.name, rank.color, 26);
 
                 return `
-                    <div onclick="selectMuscleDetail('${mKey}')" class="bg-[#0e1013] border border-[#262a34] hover:border-ember/50 rounded-xl p-2.5 cursor-pointer transition ${isRusted ? 'rust-filter' : ''}">
+                    <div onclick="selectMuscleDetail('${mKey}')" class="bg-[#0c0d0f] border border-steelBorder hover:border-ember/55 rounded-2xl p-2.5 cursor-pointer transition ${isRusted ? 'rust-filter' : ''}">
                         <div class="flex items-center justify-between gap-2.5">
                             <div class="shrink-0">${medalSvg}</div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center justify-between text-xs mb-1">
-                                    <span class="font-display font-bold uppercase text-white tracking-wide truncate">${label}</span>
+                                    <span class="font-display text-sm font-bold uppercase text-white tracking-wide truncate">${label}</span>
                                     <div class="flex items-center gap-2 font-mono text-[10px] shrink-0">
                                         <span class="font-bold uppercase" style="color: ${rank.color}">${rank.name}</span>
                                         <span class="text-gray-400">LVL ${stat.level}</span>
                                     </div>
                                 </div>
-                                <div class="w-full h-1.5 bg-[#181b22] rounded-full overflow-hidden">
-                                    <div class="h-full transition-all duration-300" style="width: ${pct}%; background-color: ${rank.color}"></div>
+                                <div class="w-full h-1.5 bg-[#1b1d22] rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full transition-all duration-300" style="width: ${pct}%; background-color: ${rank.color}"></div>
                                 </div>
                             </div>
                         </div>
@@ -1647,9 +1642,9 @@
             }).join('');
 
             document.getElementById('rankLegendRow').innerHTML = RANKS.map(r => `
-                <div class="bg-[#0e1013] border border-[#272b35] rounded-xl p-2 flex flex-col items-center justify-center text-center gap-1" style="box-shadow: inset 0 1px 0 ${r.color}22;">
+                <div class="bg-[#0c0d0f] border border-steelBorder rounded-2xl p-2 flex flex-col items-center justify-center text-center gap-1" style="box-shadow: inset 0 0 12px ${r.color}12;">
                     ${getRankMedalSVG(r.name, r.color, 28)}
-                    <span class="font-display text-xs font-extrabold uppercase tracking-wide leading-none" style="color: ${r.color}">
+                    <span class="font-display text-xs font-extrabold uppercase tracking-wider leading-none" style="color: ${r.color}">
                         ${r.name}
                     </span>
                     <span class="font-mono text-[9px] text-gray-500">LVL ${r.minLvl}+</span>
@@ -1665,13 +1660,13 @@
             const pct = Math.min(100, Math.round((stat.xp / needed) * 100));
 
             document.getElementById('detailMuscleMedal').innerHTML = getRankMedalSVG(rank.name, rank.color, 30);
-            document.getElementById('detailMuscleMedal').style.borderColor = `${rank.color}66`;
+            document.getElementById('detailMuscleMedal').style.borderColor = `${rank.color}55`;
             document.getElementById('detailMuscleName').textContent = (MUSCLE_INFO[mKey]?.label || mKey).toUpperCase();
             const badge = document.getElementById('detailMuscleRankBadge');
             badge.textContent = `${rank.name.toUpperCase()} · LVL ${stat.level}`;
             badge.style.color = rank.color;
             badge.style.borderColor = rank.color;
-            badge.style.backgroundColor = 'rgba(15, 17, 22, 0.9)';
+            badge.style.backgroundColor = 'rgba(20, 21, 24, 0.95)';
 
             document.getElementById('detailMuscleXpText').textContent = `${stat.xp} / ${needed} XP al prossimo livello`;
             const bar = document.getElementById('detailMuscleProgressBar');
@@ -1715,13 +1710,13 @@
             const btnPull = document.getElementById('btnModePullup');
 
             if (mode === 'pushup') {
-                btnPush.className = 'btn-ember py-2.5 px-3 rounded-lg text-sm flex items-center justify-center gap-2 spark-trigger';
-                btnPull.className = 'btn-steel py-2.5 px-3 rounded-lg font-display text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 spark-trigger';
+                btnPush.className = 'btn-ember py-3 px-3 rounded-2xl text-sm flex items-center justify-center gap-2 spark-trigger';
+                btnPull.className = 'btn-steel py-3 px-3 rounded-2xl font-display text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 spark-trigger';
                 document.getElementById('formInstructionText').textContent =
                     'Inquadrati di profilo o a 45°. L\'AI rileva l\'angolo del gomito (<90°) e conta solo le flessioni valide.';
             } else {
-                btnPull.className = 'btn-ember py-2.5 px-3 rounded-lg text-sm flex items-center justify-center gap-2 spark-trigger';
-                btnPush.className = 'btn-steel py-2.5 px-3 rounded-lg font-display text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 spark-trigger';
+                btnPull.className = 'btn-ember py-3 px-3 rounded-2xl text-sm flex items-center justify-center gap-2 spark-trigger';
+                btnPush.className = 'btn-steel py-3 px-3 rounded-2xl font-display text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 spark-trigger';
                 document.getElementById('formInstructionText').textContent =
                     'Posiziona il telefono per inquadrare sbarra e busto. L\'AI conta la trazione quando il mento supera i polsi.';
             }
@@ -1785,14 +1780,15 @@
                 };
                 processFrame();
             } catch (err) {
-                showToast('FOTOCAMERA NON DISPONIBILE — USA +1 REP TEST');
+                showToast('FOTOCAMERA NON DISPONIBILE');
             }
         }
 
         function onPoseResults(results) {
             const canvas = document.getElementById('formCanvas');
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas ? canvas.getContext('2d') : null;
             const video = document.getElementById('formVideo');
+            if (!canvas || !ctx || !video) return;
 
             canvas.width = video.videoWidth || 640;
             canvas.height = video.videoHeight || 480;
@@ -1812,7 +1808,9 @@
                     const angle = calculateAngle(shoulder, elbow, wrist);
                     document.getElementById('formAngleBadge').textContent = `ANGOLO: ${angle}°`;
 
-                    ctx.strokeStyle = '#ff5a00';
+                    ctx.strokeStyle = '#f25c19';
+                    ctx.shadowColor = '#f25c19';
+                    ctx.shadowBlur = 10;
                     ctx.lineWidth = 4;
                     ctx.beginPath();
                     ctx.moveTo(shoulder.x * canvas.width, shoulder.y * canvas.height);
